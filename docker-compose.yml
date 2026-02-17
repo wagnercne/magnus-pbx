@@ -1,0 +1,77 @@
+services:
+  # --- BANCO DE DADOS ---
+  postgres-magnus:
+    image: postgres:17
+    container_name: postgres-magnus
+    environment:
+      POSTGRES_USER: admin_magnus
+      POSTGRES_PASSWORD: magnus123
+      POSTGRES_DB: magnus_pbx
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - magnus-net
+    restart: always
+
+  # --- TELEFONIA (Asterisk 22) ---
+  asterisk-magnus:
+    build: .
+    container_name: asterisk-magnus
+    networks:
+      - magnus-net
+    ports:
+      - "5060:5060/udp"  # SIP UDP
+      - "5060:5060/tcp"  # SIP TCP
+      - "5061:5061/tcp"  # SIP TLS
+      - "8089:8089/tcp"  # WebRTC WSS (Ja funcionando)
+      - "8088:8088"
+      - "10000-10100:10000-10100/udp"
+    volumes:
+      - ./asterisk_etc:/etc/asterisk
+      - ./asterisk_logs:/var/log/asterisk
+    depends_on:
+      - postgres-magnus
+    restart: always
+
+  # --- CACHE E ESTADO (Redis) ---
+  redis-magnus:
+    image: redis:7-alpine
+    container_name: redis-magnus
+    networks:
+      - magnus-net
+    restart: always
+
+  # --- REVERSE PROXY (Traefik) ---
+  traefik-magnus:
+    image: traefik:v3
+    container_name: traefik-magnus
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - magnus-net
+    restart: always
+
+  # --- GERENCIAMENTO (Portainer) ---
+  portainer-magnus:
+    image: portainer/portainer-ce:latest
+    container_name: portainer-magnus
+    ports:
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./portainer_data:/data
+    networks:
+      - magnus-net
+    restart: always
+
+networks:
+  magnus-net:
+    driver: bridge

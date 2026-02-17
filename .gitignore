@@ -1,0 +1,211 @@
+# ============================================
+# MAGNUS PBX - Git Ignore
+# ============================================
+
+# ===== SENSÍVEL / CREDENCIAIS =====
+*.env
+.env.local
+.env.production
+**/appsettings.json
+**/appsettings.*.json
+!**/appsettings.Development.json.example
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# ===== BACKUPS E LOGS =====
+*.backup.*
+*.log
+*.bak
+logs/
+temp/
+tmp/
+
+# ===== ASTERISK =====
+# Backups de configuração
+asterisk_etc/*.backup.*
+asterisk_etc/*.bak
+asterisk_etc/*.old
+
+# Arquivos de estado do Asterisk (não versionar)
+asterisk_etc/asterisk.log
+asterisk_etc/full
+asterisk_etc/messages
+
+# ===== BANCO DE DADOS =====
+# Dumps podem ser grandes
+*.dump
+*.sql.gz
+pgdata/
+postgres-data/
+
+# ===== DOCKER =====
+# Volumes e dados locais
+.docker/
+docker-compose.override.yml
+
+# ===== C# / .NET =====
+## Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+## Rider
+.idea/
+*.sln.iml
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Build Results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+
+# ===== JAVASCRIPT / NODE =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dist folders
+dist/
+dist-ssr/
+
+# ===== VUE / VITE =====
+.vite/
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ===== PYTHON (se usar scripts Python) =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+
+# ===== SISTEMA OPERACIONAL =====
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ===== IDEs / EDITORES =====
+# Visual Studio Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# ===== SCRIPTS GERADOS =====
+# Script gerado pelo copiar-para-vm.ps1
+copiar-scp.sh
+
+# ===== TESTES =====
+TestResults/
+coverage/
+*.trx
+*.coverage
+*.coveragexml
+
+# ===== TEMPORARY FILES =====
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ===== ARQUIVOS GRANDES / MÍDIA =====
+# Sons de exemplo (normalmente inclusos no Asterisk)
+# *.wav
+# *.gsm
+# *.ulaw
+# *.alaw
+
+# ===== CERTIFICADOS E KEYS =====
+*.crt
+*.key
+*.pem
+!asterisk_etc/keys/.gitkeep
