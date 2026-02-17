@@ -35,6 +35,21 @@ asterisk_etc/asterisk.log
 asterisk_etc/full
 asterisk_etc/messages
 
+# Logs do Asterisk (gerados em runtime)
+asterisk_logs/*.log
+asterisk_logs/asterisk/
+asterisk_logs/cdr-csv/
+asterisk_logs/cel-custom/
+
+# Gravações (podem ser grandes)
+asterisk_recordings/*.wav
+asterisk_recordings/*.mp3
+asterisk_recordings/*.gsm
+
+# Sons customizados grandes
+asterisk_sounds/*.wav
+asterisk_sounds/*.mp3
+
 # ===== BANCO DE DADOS =====
 # Dumps podem ser grandes
 *.dump

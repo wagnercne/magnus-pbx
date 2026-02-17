@@ -1,0 +1,165 @@
+# =================================================================
+# MAGNUS PBX - Dockerfile Otimizado
+# Asterisk 22 LTS + PostgreSQL + WebRTC + G.729
+# =================================================================
+
+FROM ubuntu:24.04 AS builder
+
+# Variáveis de ambiente
+ENV DEBIAN_FRONTEND=noninteractive
+ENV ASTERISK_VERSION=22.1.0
+
+# =================================================================
+# STAGE 1: BUILD (Compilação)
+# =================================================================
+
+# 1. Dependências de compilação
+RUN echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore-time && \
+    apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    wget \
+    curl \
+    ca-certificates \
+    uuid-dev \
+    libxml2-dev \
+    libncurses5-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    libjansson-dev \
+    libedit-dev \
+    libpq-dev \
+    python3-dev \
+    pkg-config \
+    subversion \
+    libbcg729-dev \
+    libopus-dev \
+    autoconf \
+    automake \
+    libtool \
+    recode \
+    libasound2-dev \
+    libnewt-dev \
+    git && \
+    rm -rf /var/lib/apt/lists/*
+
+# 2. Download e compilação do Asterisk
+WORKDIR /usr/src
+RUN wget "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-${ASTERISK_VERSION}.tar.gz" && \
+    tar -zxf "asterisk-${ASTERISK_VERSION}.tar.gz" && \
+    cd "asterisk-${ASTERISK_VERSION}" && \
+    ./contrib/scripts/get_mp3_source.sh && \
+    ./contrib/scripts/install_prereq install && \
+    ./configure \
+        --with-pjproject-bundled \
+        --with-postgres \
+        --with-bcg729 \
+        --with-opus \
+        --with-jansson-bundled && \
+    make menuselect.makeopts && \
+    menuselect/menuselect \
+        --enable format_mp3 \
+        --enable res_config_pgsql \
+        --enable cdr_pgsql \
+        --enable res_http_websocket \
+        --enable codec_opus \
+        menuselect.makeopts && \
+    make -j$(nproc) && \
+    make install && \
+    make samples && \
+    rm -rf /usr/src/*
+
+# 3. Codec G.729
+WORKDIR /usr/src/asterisk-g72x
+RUN wget https://github.com/arkadijs/asterisk-g72x/archive/refs/heads/master.tar.gz -O /tmp/g729.tar.gz && \
+    tar -zxf /tmp/g729.tar.gz -C /usr/src/asterisk-g72x --strip-components=1 && \
+    ./autogen.sh && \
+    CFLAGS="-I/usr/include/asterisk" ./configure --with-bcg729 && \
+    make && \
+    make install && \
+    rm -rf /tmp/g729.tar.gz /usr/src/asterisk-g72x
+
+# =================================================================
+# STAGE 2: RUNTIME (Imagem final)
+# =================================================================
+
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 1. Dependências de runtime (apenas o necessário)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libxml2 \
+    libncurses5 \
+    libsqlite3-0 \
+    libssl3 \
+    libjansson4 \
+    libedit2 \
+    libpq5 \
+    libbcg729-0 \
+    libopus0 \
+    libasound2 \
+    libnewt0.52 \
+    ca-certificates \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Criar usuário asterisk
+RUN groupadd -r asterisk && \
+    useradd -r -g asterisk -d /var/lib/asterisk -s /sbin/nologin asterisk
+
+# 3. Copiar binários e libs do stage de build
+COPY --from=builder /usr/sbin/asterisk /usr/sbin/
+COPY --from=builder /usr/sbin/astcanary /usr/sbin/
+COPY --from=builder /usr/sbin/astdb2sqlite3 /usr/sbin/
+COPY --from=builder /usr/sbin/astdb2bdb /usr/sbin/
+COPY --from=builder /usr/sbin/rasterisk /usr/sbin/
+COPY --from=builder /usr/sbin/safe_asterisk /usr/sbin/
+
+COPY --from=builder /usr/lib/asterisk /usr/lib/asterisk
+COPY --from=builder /usr/lib/libasterisk* /usr/lib/
+COPY --from=builder /var/lib/asterisk /var/lib/asterisk
+COPY --from=builder /var/spool/asterisk /var/spool/asterisk
+
+# 4. Criar estrutura de diretórios
+RUN mkdir -p \
+    /etc/asterisk \
+    /var/log/asterisk/cdr-csv \
+    /var/log/asterisk/cdr \
+    /var/spool/asterisk/monitor \
+    /var/spool/asterisk/voicemail \
+    /var/spool/asterisk/recording \
+    /var/run/asterisk \
+    && chown -R asterisk:asterisk \
+        /etc/asterisk \
+        /var/lib/asterisk \
+        /var/log/asterisk \
+        /var/spool/asterisk \
+        /var/run/asterisk \
+    && chmod -R 755 \
+        /var/log/asterisk \
+        /var/spool/asterisk
+
+# 5. Sons PT-BR
+WORKDIR /tmp
+RUN mkdir -p /var/lib/asterisk/sounds/pt_BR && \
+    curl -L https://github.com/marcelsavegnago/issabel_sounds_pt_BR/archive/refs/heads/master.tar.gz -o sounds.tar.gz && \
+    tar -zxf sounds.tar.gz -C /var/lib/asterisk/sounds/pt_BR --strip-components=1 && \
+    chown -R asterisk:asterisk /var/lib/asterisk/sounds && \
+    rm -rf /tmp/*
+
+# 6. Healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD asterisk -rx "core show version" || exit 1
+
+# 7. Volumes persistentes
+VOLUME ["/etc/asterisk", "/var/log/asterisk", "/var/spool/asterisk"]
+
+# 8. Expor portas
+EXPOSE 5060/udp 5060/tcp 5061/tcp 8088/tcp 8089/tcp 10000-10100/udp
+
+# 9. Executar como usuário asterisk
+USER asterisk
+WORKDIR /var/lib/asterisk
+
+# 10. Comando inicial
+CMD ["asterisk", "-f", "-vvv", "-u", "asterisk"]

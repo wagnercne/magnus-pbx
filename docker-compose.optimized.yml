@@ -1,0 +1,192 @@
+# =================================================================
+# MAGNUS PBX - Docker Compose Otimizado
+# Versão: 2.0
+# =================================================================
+
+version: '3.8'
+
+# =================================================================
+# NETWORKS
+# =================================================================
+networks:
+  magnus-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# =================================================================
+# VOLUMES NOMEADOS (Melhor para Docker)
+# =================================================================
+volumes:
+  postgres_data:
+    driver: local
+  portainer_data:
+    driver: local
+
+# =================================================================
+# SERVICES
+# =================================================================
+services:
+
+  # --- BANCO DE DADOS (PostgreSQL 17) ---
+  postgres-magnus:
+    image: postgres:17-alpine
+    container_name: postgres-magnus
+    hostname: postgres-magnus
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin_magnus
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-magnus123}
+      POSTGRES_DB: magnus_pbx
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    networks:
+      magnus-net:
+        ipv4_address: 172.20.0.2
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin_magnus"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # --- TELEFONIA (Asterisk 22) ---
+  asterisk-magnus:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: magnus-pbx/asterisk:22-latest
+    container_name: asterisk-magnus
+    hostname: asterisk-magnus
+    restart: unless-stopped
+    networks:
+      magnus-net:
+        ipv4_address: 172.20.0.3
+    ports:
+      - "5060:5060/udp"        # SIP UDP
+      - "5060:5060/tcp"        # SIP TCP
+      - "5061:5061/tcp"        # SIP TLS
+      - "8088:8088/tcp"        # HTTP/WebSocket
+      - "8089:8089/tcp"        # HTTPS/WebSocket Secure
+      - "10000-10100:10000-10100/udp"  # RTP
+    volumes:
+      - ./asterisk_etc:/etc/asterisk:rw
+      - ./asterisk_logs:/var/log/asterisk:rw
+      - ./asterisk_recordings:/var/spool/asterisk/monitor:rw
+    depends_on:
+      postgres-magnus:
+        condition: service_healthy
+    environment:
+      - TZ=America/Sao_Paulo
+    healthcheck:
+      test: ["CMD", "asterisk", "-rx", "core show version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+    # Limites de recursos (ajustar conforme necessário)
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # --- CACHE (Redis 7) ---
+  redis-magnus:
+    image: redis:7-alpine
+    container_name: redis-magnus
+    hostname: redis-magnus
+    restart: unless-stopped
+    networks:
+      magnus-net:
+        ipv4_address: 172.20.0.4
+    command: redis-server --appendonly yes
+    volumes:
+      - ./redis_data:/data:rw
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # --- REVERSE PROXY (Traefik v3) ---
+  traefik-magnus:
+    image: traefik:v3
+    container_name: traefik-magnus
+    hostname: traefik-magnus
+    restart: unless-stopped
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--log.level=INFO"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"  # Dashboard Traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik:/etc/traefik:ro
+    networks:
+      magnus-net:
+        ipv4_address: 172.20.0.5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # --- GERENCIAMENTO (Portainer CE) ---
+  portainer-magnus:
+    image: portainer/portainer-ce:latest
+    container_name: portainer-magnus
+    hostname: portainer-magnus
+    restart: unless-stopped
+    ports:
+      - "9443:9443"  # HTTPS Portainer
+      - "9000:9000"  # HTTP Portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data:/data
+    networks:
+      magnus-net:
+        ipv4_address: 172.20.0.6
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# =================================================================
+# NOTAS
+# =================================================================
+# 1. Usar `docker compose up -d` para iniciar
+# 2. Usar `docker compose logs -f asterisk-magnus` para ver logs
+# 3. Usar `docker compose exec asterisk-magnus asterisk -rvvv` para CLI
+# 4. Porta 9443 para Portainer, 8080 para Traefik Dashboard
+# 5. Healthchecks configuraados para todos os serviços críticos
+# 6. Logs limitados para economizar espaço em disco
+# 7. IPs fixos para facilitar firewall/debug
+# 8. Volumes nomeados para melhor gerenciamento Docker
