@@ -127,7 +127,40 @@ MAGNUS-PBX/
 
 ## 🚀 Quick Start
 
-### 1. Aplicar Correções no Banco
+### 📥 Instalar na VM Linux
+
+```bash
+# Clonar o repositório
+cd /srv
+git clone https://github.com/wagnercne/magnus-pbx.git
+cd magnus-pbx
+
+# Subir containers
+docker compose up -d
+
+# Executar deploy inicial
+chmod +x scripts/*.sh
+./scripts/deploy.sh
+
+# Validar
+docker compose exec asterisk-magnus asterisk -rx "dialplan show contexts"
+```
+
+**Documentação completa:** [doc/SETUP_VM.md](doc/SETUP_VM.md)
+
+---
+
+### 🔄 Atualizar (após mudanças no Windows)
+
+```bash
+cd /srv/magnus-pbx
+git pull origin main
+./scripts/deploy.sh  # ou ./scripts/reload-dialplan.sh se só mudou dialplan
+```
+
+---
+
+### 💻 Desenvolvimento Local (Windows)
 
 ```bash
 cd C:\DEV\PROJETOS\MAGNUS-PBX

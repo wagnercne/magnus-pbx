@@ -5,7 +5,8 @@ Esta pasta contém toda a documentação técnica do projeto Magnus PBX.
 ## 🚀 Começando
 
 **Novo no projeto?** Comece aqui:
-1. [COMO_INICIAR.md](COMO_INICIAR.md) - Guia de instalação completo
+1. [SETUP_VM.md](SETUP_VM.md) - **Setup completo na VM Linux** (clone do GitHub)
+2. [COMO_INICIAR.md](COMO_INICIAR.md) - Guia de instalação e configuração inicial
 
 ## 📖 Índice por Categoria
 
