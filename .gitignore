@@ -46,9 +46,8 @@ asterisk_recordings/*.wav
 asterisk_recordings/*.mp3
 asterisk_recordings/*.gsm
 
-# Sons customizados grandes
-asterisk_sounds/*.wav
-asterisk_sounds/*.mp3
+# NOTA: Sons PT-BR já vêm embutidos no container
+# Pasta asterisk_sounds/ removida (desnecessária)
 
 # ===== BANCO DE DADOS =====
 # Dumps podem ser grandes

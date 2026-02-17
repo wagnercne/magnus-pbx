@@ -80,13 +80,14 @@ echo ""
 echo "[5/8] 📁 Criando estrutura de pastas..."
 mkdir -p postgres_data
 mkdir -p portainer_data
+mkdir -p redis_data
 mkdir -p asterisk_logs
 mkdir -p asterisk_recordings
-mkdir -p asterisk_sounds
 
 # Limpar logs antigos se existirem
 rm -f asterisk_logs/*.log 2>/dev/null || true
 
+# NOTA: Sons PT-BR já vêm no container, não precisa pasta no host
 echo "✅ Estrutura criada"
 
 # =================================================================

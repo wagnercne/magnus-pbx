@@ -106,10 +106,12 @@ git branch
 mkdir -p postgres_data
 mkdir -p portainer_data
 mkdir -p redis_data
-mkdir -p traefik
 
 # 3.2 Garantir que pastas de log estão vazias
 rm -f asterisk_logs/*.log 2>/dev/null || true
+
+# NOTA: Sons PT-BR já vêm embutidos no container (/var/lib/asterisk/sounds/pt_BR)
+# Pasta asterisk_sounds/ é opcional (apenas para sons customizados extras)
 
 # 3.3 Verificar estrutura
 ls -la
@@ -120,12 +122,12 @@ ls -la
 asterisk_etc/          ← Configurações (versionado)
 asterisk_logs/         ← Logs (vazio, não versionado)
 asterisk_recordings/   ← Gravações (vazio)
-asterisk_sounds/       ← Sons customizados (vazio)
 backend/               ← API .NET (futuro)
 doc/                   ← Documentação
 frontend/              ← Vue 3 (futuro)
 postgres_data/         ← Dados PostgreSQL (criado agora)
 portainer_data/        ← Dados Portainer (criado agora)
+redis_data/            ← Dados Redis (criado agora)
 sql/                   ← Scripts SQL iniciais
 scripts/               ← Scripts de automação
 docker-compose.yml     ← Orquestração
@@ -133,6 +135,11 @@ Dockerfile             ← Imagem Asterisk
 README.md
 .gitignore
 ```
+
+**Nota sobre sons:**
+- ✅ Sons PT-BR já incluídos no container (`/var/lib/asterisk/sounds/pt_BR`)
+- ✅ Instalados automaticamente durante build do Dockerfile
+- ⏭️ `asterisk_sounds/` seria apenas para sons customizados extras (opcional)
 
 ### Passo 4: Build da Imagem Asterisk
 
