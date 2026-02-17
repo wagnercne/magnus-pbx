@@ -152,6 +152,10 @@ cd /srv/magnus-pbx
 # 3. Build
 docker compose build asterisk-magnus
 
+# Ou, para usar versão otimizada:
+# docker compose -f docker-compose.optimized.yml build asterisk-magnus
+# Ver doc/COMO_USAR_DOCKER_OPTIMIZED.md para detalhes
+
 # 4. Deploy
 docker compose up -d
 

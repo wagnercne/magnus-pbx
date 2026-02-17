@@ -61,8 +61,9 @@ services:
   asterisk-magnus:
     build:
       context: .
-      dockerfile: Dockerfile
-    image: magnus-pbx/asterisk:22-latest
+      dockerfile: Dockerfile.optimized
+    image: magnus-pbx/asterisk:22-optimized
+    container_name: asterisk-magnus
     container_name: asterisk-magnus
     hostname: asterisk-magnus
     restart: unless-stopped
