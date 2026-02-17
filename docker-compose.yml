@@ -28,6 +28,8 @@ services:
     volumes:
       - ./asterisk_etc:/etc/asterisk
       - ./asterisk_logs:/var/log/asterisk
+      - ./asterisk_recordings:/var/spool/asterisk/monitor
+      - ./custom_sounds:/var/lib/asterisk/sounds/custom
     depends_on:
       - postgres-magnus
     restart: always

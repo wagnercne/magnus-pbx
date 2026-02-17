@@ -106,12 +106,13 @@ git branch
 mkdir -p postgres_data
 mkdir -p portainer_data
 mkdir -p redis_data
+mkdir -p custom_sounds
 
 # 3.2 Garantir que pastas de log estão vazias
 rm -f asterisk_logs/*.log 2>/dev/null || true
 
 # NOTA: Sons PT-BR já vêm embutidos no container (/var/lib/asterisk/sounds/pt_BR)
-# Pasta asterisk_sounds/ é opcional (apenas para sons customizados extras)
+# Pasta custom_sounds/ é para sons customizados opcionais (voz masculina, outros idiomas, etc)
 
 # 3.3 Verificar estrutura
 ls -la
@@ -122,6 +123,7 @@ ls -la
 asterisk_etc/          ← Configurações (versionado)
 asterisk_logs/         ← Logs (vazio, não versionado)
 asterisk_recordings/   ← Gravações (vazio)
+custom_sounds/         ← Sons customizados opcionais (criado agora)
 backend/               ← API .NET (futuro)
 doc/                   ← Documentação
 frontend/              ← Vue 3 (futuro)
@@ -137,6 +139,8 @@ README.md
 ```
 
 **Nota sobre sons:**
+- 📁 `custom_sounds/` é para customizações opcionais (voz masculina, outros idiomas, sonsda empresa)
+- 📖 Veja [custom_sounds/README.md](../custom_sounds/README.md) para detalhes
 - ✅ Sons PT-BR já incluídos no container (`/var/lib/asterisk/sounds/pt_BR`)
 - ✅ Instalados automaticamente durante build do Dockerfile
 - ⏭️ `asterisk_sounds/` seria apenas para sons customizados extras (opcional)

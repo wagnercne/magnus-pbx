@@ -83,11 +83,12 @@ mkdir -p portainer_data
 mkdir -p redis_data
 mkdir -p asterisk_logs
 mkdir -p asterisk_recordings
+mkdir -p custom_sounds
 
 # Limpar logs antigos se existirem
 rm -f asterisk_logs/*.log 2>/dev/null || true
 
-# NOTA: Sons PT-BR já vêm no container, não precisa pasta no host
+# NOTA: Sons PT-BR já vêm no container. custom_sounds/ é para customizações opcionais
 echo "✅ Estrutura criada"
 
 # =================================================================

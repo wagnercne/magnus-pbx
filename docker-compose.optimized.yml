@@ -80,6 +80,7 @@ services:
       - ./asterisk_etc:/etc/asterisk:rw
       - ./asterisk_logs:/var/log/asterisk:rw
       - ./asterisk_recordings:/var/spool/asterisk/monitor:rw
+      - ./custom_sounds:/var/lib/asterisk/sounds/custom:rw
     depends_on:
       postgres-magnus:
         condition: service_healthy

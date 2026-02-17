@@ -63,17 +63,48 @@ docker compose exec asterisk-magnus asterisk -rx "core show file formats"
 
 ## 🎨 Sons Customizados (Opcional)
 
-Se você quiser adicionar sons **customizados** além dos PT-BR padrão:
+Se você quiser adicionar sons **customizados** além dos PT-BR padrão, temos 3 opções:
 
-### Opção 1: Via Volume Mount (Desenvolvimento)
+### ✅ Opção 1: Via Volume Mount (RECOMENDADO - JÁ CONFIGURADO!)
+
+**O volume já está montado no `docker-compose.yml`:**
 
 ```yaml
-# docker-compose.yml
+# docker-compose.yml (linha ~30)
 services:
   asterisk-magnus:
     volumes:
-      - ./custom_sounds:/var/lib/asterisk/sounds/custom:ro
+      - ./asterisk_etc:/etc/asterisk
+      - ./asterisk_logs:/var/log/asterisk
+      - ./asterisk_recordings:/var/spool/asterisk/monitor
+      - ./custom_sounds:/var/lib/asterisk/sounds/custom  # ✅ Já configurado!
 ```
+
+**Para usar:**
+
+1. A pasta `custom_sounds/` já existe no projeto (com README.md completo)
+2. Adicione seus arquivos de áudio:
+```bash
+# Exemplo: voz masculina PT-BR
+mkdir -p custom_sounds/pt_BR_male/voicemail
+cp vozes-masculinas/*.gsm custom_sounds/pt_BR_male/voicemail/
+
+# Exemplo: sons da empresa
+mkdir -p custom_sounds/minha_empresa
+cp boas-vindas.{gsm,ulaw,opus} custom_sounds/minha_empresa/
+```
+
+3. Use no dialplan:
+```conf
+[mainmenu]
+exten => s,1,Playback(custom/minha_empresa/boas-vindas)
+
+; Ou trocar voz feminina por masculina:
+exten => *97,1,Set(CHANNEL(language)=custom/pt_BR_male)
+ same => n,VoiceMailMain()
+```
+
+📖 **Veja documentação completa em:** [custom_sounds/README.md](../custom_sounds/README.md)
 
 ### Opção 2: Durante o Build (Produção)
 

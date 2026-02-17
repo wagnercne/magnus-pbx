@@ -49,6 +49,22 @@ asterisk_recordings/*.gsm
 # NOTA: Sons PT-BR já vêm embutidos no container
 # Pasta asterisk_sounds/ removida (desnecessária)
 
+# Sons customizados (ignora arquivos de áudio mas mantém estrutura)
+custom_sounds/*.gsm
+custom_sounds/*.ulaw
+custom_sounds/*.alaw
+custom_sounds/*.wav
+custom_sounds/*.mp3
+custom_sounds/*.opus
+custom_sounds/**/*.gsm
+custom_sounds/**/*.ulaw
+custom_sounds/**/*.alaw
+custom_sounds/**/*.wav
+custom_sounds/**/*.mp3
+custom_sounds/**/*.opus
+!custom_sounds/README.md
+!custom_sounds/.gitkeep
+
 # ===== BANCO DE DADOS =====
 # Dumps podem ser grandes
 *.dump
