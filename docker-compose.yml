@@ -8,8 +8,7 @@ services:
       POSTGRES_PASSWORD: magnus123
       POSTGRES_DB: magnus_pbx
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
-    networks:
+      - ./postgres_data:/var/lib/postgresql/data      - ./sql:/docker-entrypoint-initdb.d    networks:
       - magnus-net
     restart: always
 
