@@ -2,7 +2,7 @@ FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# 1. Dependências e correção de tempo
+# 1. Dependï¿½ncias e correï¿½ï¿½o de tempo
 RUN echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore-time && \
     apt-get update && apt-get install -y \
     build-essential wget curl uuid-dev libxml2-dev libncurses5-dev \
@@ -11,7 +11,7 @@ RUN echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore
     autoconf automake libtool recode libasound2-dev libnewt-dev git && \
     apt-get clean
 
-# 2. CRIAÇÃO DO USUÁRIO (Resolve o erro da image_9927d0)
+# 2. CRIAï¿½ï¿½O DO USUï¿½RIO (Resolve o erro da image_9927d0)
 RUN groupadd -r asterisk && \
     useradd -r -g asterisk -d /var/lib/asterisk -s /sbin/nologin asterisk
 
@@ -46,7 +46,17 @@ RUN mkdir -p /var/lib/asterisk/sounds/pt_BR && \
     tar -zxvf /tmp/sounds.tar.gz -C /var/lib/asterisk/sounds/pt_BR --strip-components=1 && \
     rm -rf /tmp/sounds.tar.gz /tmp/g729.tar.gz
 
-# 6. Permissões Finais (Agora com o usuário criado)
+# 6. Permissï¿½es Finais (Agora com o usuï¿½rio criado)
 RUN chown -R asterisk:asterisk /etc/asterisk /var/lib/asterisk /var/log/asterisk /var/spool/asterisk
+
+# 7. Criar diretÃ³rios para CDR e logs (Fix para erros de Master.csv)
+RUN mkdir -p /var/log/asterisk/cdr-csv && \
+    mkdir -p /var/log/asterisk/cdr && \
+    mkdir -p /var/spool/asterisk/monitor && \
+    mkdir -p /var/spool/asterisk/voicemail && \
+    chown -R asterisk:asterisk /var/log/asterisk && \
+    chown -R asterisk:asterisk /var/spool/asterisk && \
+    chmod -R 755 /var/log/asterisk && \
+    chmod -R 755 /var/spool/asterisk
 
 CMD ["asterisk", "-f", "-vvv"]

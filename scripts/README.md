@@ -149,6 +149,35 @@ cat diagnostico.log
 
 ---
 
+#### `fix-cdr-dirs.sh`
+**Corrige erros de CDR (Call Detail Records)**
+
+```bash
+./scripts/fix-cdr-dirs.sh
+```
+
+**O que faz:**
+1. Cria diretório `/var/log/asterisk/cdr-csv/`
+2. Cria diretório `/var/log/asterisk/cdr/`
+3. Cria diretório `/var/spool/asterisk/monitor/`
+4. Cria diretório `/var/spool/asterisk/voicemail/`
+5. Ajusta permissões (asterisk:asterisk)
+6. Recarrega módulo `cdr_csv.so`
+
+**Use quando:**
+- Ver erro "Unable to open file .../Master.csv"
+- Ver erro "Unable to write CSV record to master"
+- Logs mostram problema com CDR
+
+**Problema típico:**
+```
+ERROR: Unable to open file /var/log/asterisk/cdr-csv//Master.csv : No such file or directory
+```
+
+**Solução:** Execute o script uma vez, os erros vão sumir.
+
+---
+
 ### 🚪 Hardware (Portaria Virtual)
 
 #### `open_gate.sh`
