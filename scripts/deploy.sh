@@ -79,6 +79,9 @@ docker compose exec asterisk-magnus asterisk -rx "module show like pgsql"
 echo "  - pbx_config.so"
 docker compose exec asterisk-magnus asterisk -rx "module show like pbx_config"
 
+echo "  - cdr_pgsql.so"
+docker compose exec asterisk-magnus asterisk -rx "module show like cdr_pgsql"
+
 # Passo 6: Recarregar dialplan
 echo ""
 echo "[6/7] Recarregando dialplan..."
