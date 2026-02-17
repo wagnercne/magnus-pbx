@@ -1,0 +1,136 @@
+-- =================================================================
+-- MAGNUS PBX - Dados de Exemplo (Sample Data)
+-- Versão: 2.0 (Reestruturado em 17/02/2026)
+-- =================================================================
+-- Dados para testes e validação inicial do sistema
+-- =================================================================
+
+-- ==========================================================
+-- 1. CRIAR TENANTS DE EXEMPLO
+-- ==========================================================
+INSERT INTO tenants (name, domain, is_active) VALUES
+    ('Condomínio Bela Vista', 'belavista', true),
+    ('Empresa ACME Corp', 'acme', true),
+    ('Techno Solutions', 'techno', true)
+ON CONFLICT (domain) DO NOTHING;
+
+-- ==========================================================
+-- 2. RAMAL 1001@belavista (WebRTC)
+-- ==========================================================
+INSERT INTO ps_auths (id, tenant_id, auth_type, username, password) VALUES
+    ('1001@belavista', 1, 'userpass', '1001', 'magnus123')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO ps_aors (id, tenant_id, max_contacts, remove_existing) VALUES
+    ('1001@belavista', 1, 5, true)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, disallow, allow, webrtc, dtls_auto_generate_cert) VALUES
+    ('1001@belavista', 1, 'transport-wss', '1001@belavista', '1001@belavista', 'ctx-belavista', 'all', 'opus,g722,ulaw', 'yes', 'yes')
+ON CONFLICT (id) DO NOTHING;
+
+-- ==========================================================
+-- 3. RAMAL 1002@belavista (SIP tradicional)
+-- ==========================================================
+INSERT INTO ps_auths (id, tenant_id, auth_type, username, password) VALUES
+    ('1002@belavista', 1, 'userpass', '1002', 'magnus123')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO ps_aors (id, tenant_id, max_contacts, remove_existing) VALUES
+    ('1002@belavista', 1, 2, true)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, disallow, allow) VALUES
+    ('1002@belavista', 1, 'transport-udp', '1002@belavista', '1002@belavista', 'ctx-belavista', 'all', 'ulaw,alaw,gsm')
+ON CONFLICT (id) DO NOTHING;
+
+-- ==========================================================
+-- 4. RAMAL 2001@acme
+-- ==========================================================
+INSERT INTO ps_auths (id, tenant_id, auth_type, username, password) VALUES
+    ('2001@acme', 2, 'userpass', '2001', 'acme2001')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO ps_aors (id, tenant_id, max_contacts, remove_existing) VALUES
+    ('2001@acme', 2, 1, true)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, disallow, allow) VALUES
+    ('2001@acme', 2, 'transport-udp', '2001@acme', '2001@acme', 'ctx-acme', 'all', 'ulaw,alaw')
+ON CONFLICT (id) DO NOTHING;
+
+-- ==========================================================
+-- 5. RAMAL 3001@techno (WebRTC)
+-- ==========================================================
+INSERT INTO ps_auths (id, tenant_id, auth_type, username, password) VALUES
+    ('3001@techno', 3, 'userpass', '3001', 'techno3001')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO ps_aors (id, tenant_id, max_contacts, remove_existing) VALUES
+    ('3001@techno', 3, 5, true)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, disallow, allow, webrtc, dtls_auto_generate_cert) VALUES
+    ('3001@techno', 3, 'transport-wss', '3001@techno', '3001@techno', 'ctx-techno', 'all', 'opus,vp8', 'yes', 'yes')
+ON CONFLICT (id) DO NOTHING;
+
+-- ==========================================================
+-- 6. DOMAIN ALIASES (Para roteamento)
+-- ==========================================================
+INSERT INTO ps_domain_aliases (id, domain) VALUES
+    ('belavista', 'belavista.magnus.local'),
+    ('acme', 'acme.magnus.local'),
+    ('techno', 'techno.magnus.local')
+ON CONFLICT (id) DO NOTHING;
+
+-- ==========================================================
+-- 7. FILA DE ATENDIMENTO (EXEMPLO)
+-- ==========================================================
+INSERT INTO queues (name, tenant_id, strategy, timeout) VALUES
+    ('suporte', 1, 'rrmemory', 30)
+ON CONFLICT (name) DO NOTHING;
+
+INSERT INTO queue_members (queue_name, interface) VALUES
+    ('suporte', 'PJSIP/1001@belavista'),
+    ('suporte', 'PJSIP/1002@belavista')
+ON CONFLICT DO NOTHING;
+
+-- ==========================================================
+-- 8. CDR DE TESTE (OPCIONAL - SIMULAÇÃO)
+-- ==========================================================
+-- Inserir alguns CDRs de exemplo para testar consultas
+INSERT INTO cdr (calldate, src, dst, dcontext, duration, billsec, disposition, uniqueid, linkedid, tenant_id) VALUES
+    (NOW() - INTERVAL '1 hour', '1001', '1002', 'ctx-belavista', 125, 120, 'ANSWERED', '1234567890.1', '1234567890.1', 1),
+    (NOW() - INTERVAL '2 hours', '1002', '1001', 'ctx-belavista', 45, 40, 'ANSWERED', '1234567890.2', '1234567890.2', 1),
+    (NOW() - INTERVAL '3 hours', '1001', '*43', 'ctx-belavista', 30, 30, 'ANSWERED', '1234567890.3', '1234567890.3', 1),
+    (NOW() - INTERVAL '4 hours', '1001', '1002', 'ctx-belavista', 0, 0, 'NO ANSWER', '1234567890.4', '1234567890.4', 1),
+    (NOW() - INTERVAL '5 hours', '2001', '1001', 'ctx-acme', 0, 0, 'FAILED', '1234567890.5', '1234567890.5', 2);
+
+-- ==========================================================
+-- 9. INFORMAÇÕES DOS DADOS CRIADOS
+-- ==========================================================
+DO $$
+DECLARE
+    total_tenants INT;
+    total_endpoints INT;
+    total_cdrs INT;
+BEGIN
+    SELECT COUNT(*) INTO total_tenants FROM tenants;
+    SELECT COUNT(*) INTO total_endpoints FROM ps_endpoints;
+    SELECT COUNT(*) INTO total_cdrs FROM cdr;
+    
+    RAISE NOTICE '✅ Dados de exemplo criados com sucesso!';
+    RAISE NOTICE '';
+    RAISE NOTICE '📊 Estatísticas:';
+    RAISE NOTICE '   - % tenants criados', total_tenants;
+    RAISE NOTICE '   - % endpoints/ramais criados', total_endpoints;
+    RAISE NOTICE '   - % CDRs de exemplo', total_cdrs;
+    RAISE NOTICE '';
+    RAISE NOTICE '🔑 Credenciais de teste:';
+    RAISE NOTICE '   - 1001@belavista / magnus123 (WebRTC)';
+    RAISE NOTICE '   - 1002@belavista / magnus123 (SIP)';
+    RAISE NOTICE '   - 2001@acme / acme2001';
+    RAISE NOTICE '   - 3001@techno / techno3001 (WebRTC)';
+    RAISE NOTICE '';
+    RAISE NOTICE '🎯 Configure seu softphone e disque *43 para teste!';
+END $$;

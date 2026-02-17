@@ -41,6 +41,9 @@ asterisk_etc/messages
 *.sql.gz
 pgdata/
 postgres-data/
+postgres_data/
+*.db
+*.sqlite
 
 # ===== DOCKER =====
 # Volumes e dados locais
