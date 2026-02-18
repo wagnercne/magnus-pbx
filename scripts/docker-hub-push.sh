@@ -8,7 +8,7 @@ set -e
 # Configurações (ALTERAR PARA SEU USUÁRIO!)
 DOCKER_USER="${DOCKER_USER:-wagnercne}"
 IMAGE_NAME="magnus-pbx"
-ASTERISK_VERSION="22.1.0"
+ASTERISK_VERSION="22"
 
 # Cores
 RED='\033[0;31m'
@@ -23,7 +23,7 @@ echo "════════════════════════�
 echo ""
 echo "Docker Hub User: $DOCKER_USER"
 echo "Image Name: $IMAGE_NAME"
-echo "Asterisk Version: $ASTERISK_VERSION"
+echo "Asterisk Version: $ASTERISK_VERSION (LTS current)"
 echo ""
 
 # 1. Verificar login
@@ -65,13 +65,11 @@ echo ""
 echo -e "${YELLOW}[3/6]${NC} Building imagem..."
 echo "Tags que serão criadas:"
 echo "  • $DOCKER_USER/$IMAGE_NAME:$ASTERISK_VERSION-$TAG_SUFFIX"
-echo "  • $DOCKER_USER/$IMAGE_NAME:22-$TAG_SUFFIX"
 echo "  • $DOCKER_USER/$IMAGE_NAME:$TAG_SUFFIX"
 echo ""
 
 docker build \
     -t "$DOCKER_USER/$IMAGE_NAME:$ASTERISK_VERSION-$TAG_SUFFIX" \
-    -t "$DOCKER_USER/$IMAGE_NAME:22-$TAG_SUFFIX" \
     -t "$DOCKER_USER/$IMAGE_NAME:$TAG_SUFFIX" \
     -f "$DOCKERFILE" \
     .
@@ -100,7 +98,6 @@ echo "Isso pode levar 5-10 minutos..."
 echo ""
 
 docker push "$DOCKER_USER/$IMAGE_NAME:$ASTERISK_VERSION-$TAG_SUFFIX"
-docker push "$DOCKER_USER/$IMAGE_NAME:22-$TAG_SUFFIX"
 docker push "$DOCKER_USER/$IMAGE_NAME:$TAG_SUFFIX"
 
 echo -e "${GREEN}✅ Push concluído${NC}"
@@ -113,7 +110,6 @@ echo "════════════════════════�
 echo ""
 echo "📦 Imagens disponíveis:"
 echo "  • docker pull $DOCKER_USER/$IMAGE_NAME:$ASTERISK_VERSION-$TAG_SUFFIX"
-echo "  • docker pull $DOCKER_USER/$IMAGE_NAME:22-$TAG_SUFFIX"
 echo "  • docker pull $DOCKER_USER/$IMAGE_NAME:$TAG_SUFFIX"
 echo ""
 echo "🌐 Docker Hub:"
