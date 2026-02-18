@@ -100,11 +100,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
-          memory: 2G
+          cpus: '1.5'      # Deixa 0.5 CPU para sistema/outros containers
+          memory: 1.5G     # Deixa 512M para sistema/outros containers
         reservations:
-          cpus: '0.5'
-          memory: 512M
+          cpus: '0.3'
+          memory: 256M
 
   # --- CACHE (Redis 7) ---
   redis-magnus:
