@@ -73,7 +73,7 @@ WORKDIR /usr/src/asterisk-g72x
 RUN wget https://github.com/arkadijs/asterisk-g72x/archive/refs/heads/master.tar.gz -O /tmp/g729.tar.gz && \
     tar -zxf /tmp/g729.tar.gz -C /usr/src/asterisk-g72x --strip-components=1 && \
     ./autogen.sh && \
-    CFLAGS="-I/usr/local/include/asterisk" ./configure --with-bcg729 && \
+    CFLAGS="-I/usr/local/include" ./configure --with-bcg729 && \
     make && \
     make install && \
     rm -rf /tmp/g729.tar.gz /usr/src/asterisk-g72x
