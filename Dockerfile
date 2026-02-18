@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # 1. Depend´┐¢ncias e corre´┐¢´┐¢o de tempo
 RUN echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore-time && \
     apt-get update && apt-get install -y \
-    build-essential wget curl uuid-dev libxml2-dev libncurses5-dev \
+    build-essential wget curl uuid-dev libxml2-dev libncurses-dev \
     libsqlite3-dev libssl-dev libjansson-dev libedit-dev libpq-dev \
     python3-dev pkg-config subversion libbcg729-dev libopus-dev \
     autoconf automake libtool recode libasound2-dev libnewt-dev git && \
