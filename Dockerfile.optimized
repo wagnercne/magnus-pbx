@@ -48,7 +48,6 @@ RUN wget "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22-curre
     tar -zxf "asterisk-22-current.tar.gz" && \
     cd asterisk-22.* && \
     ./contrib/scripts/get_mp3_source.sh && \
-    yes | ./contrib/scripts/install_prereq install && \
     ./configure \
         --with-pjproject-bundled \
         --with-postgres \
