@@ -25,7 +25,7 @@ RUN wget http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22-curren
     yes | ./contrib/scripts/install_prereq install && \
     ./configure --with-pjproject-bundled --with-postgres --with-bcg729 --with-opus && \
     make menuselect.makeopts && \
-    menuselect/menuselect --enable format_mp3 --enable res_config_pgsql asterisk.makeopts && \
+    menuselect/menuselect --enable format_mp3 --enable res_config_pgsql menuselect.makeopts && \
     make -j$(nproc) && \
     make install && \
     make config
@@ -36,7 +36,7 @@ RUN mkdir -p /usr/src/asterisk-g72x && \
     tar -zxvf /tmp/g729.tar.gz -C /usr/src/asterisk-g72x --strip-components=1 && \
     cd /usr/src/asterisk-g72x && \
     ./autogen.sh && \
-    CFLAGS="-I/usr/src/asterisk/include" ./configure --with-bcg729 && \
+    CFLAGS="-I/usr/local/include/asterisk" ./configure --with-bcg729 && \
     make && \
     make install
 
