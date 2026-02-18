@@ -48,7 +48,7 @@ RUN wget "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22-curre
     tar -zxf "asterisk-22-current.tar.gz" && \
     cd asterisk-22.* && \
     ./contrib/scripts/get_mp3_source.sh && \
-    ./contrib/scripts/install_prereq install && \
+    yes | ./contrib/scripts/install_prereq install && \
     ./configure \
         --with-pjproject-bundled \
         --with-postgres \
@@ -73,7 +73,7 @@ WORKDIR /usr/src/asterisk-g72x
 RUN wget https://github.com/arkadijs/asterisk-g72x/archive/refs/heads/master.tar.gz -O /tmp/g729.tar.gz && \
     tar -zxf /tmp/g729.tar.gz -C /usr/src/asterisk-g72x --strip-components=1 && \
     ./autogen.sh && \
-    CFLAGS="-I/usr/include/asterisk" ./configure --with-bcg729 && \
+    CFLAGS="-I/usr/local/include/asterisk" ./configure --with-bcg729 && \
     make && \
     make install && \
     rm -rf /tmp/g729.tar.gz /usr/src/asterisk-g72x
