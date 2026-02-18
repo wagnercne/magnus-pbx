@@ -36,7 +36,7 @@ RUN mkdir -p /usr/src/asterisk-g72x && \
     tar -zxvf /tmp/g729.tar.gz -C /usr/src/asterisk-g72x --strip-components=1 && \
     cd /usr/src/asterisk-g72x && \
     ./autogen.sh && \
-    CFLAGS="-I/usr/local/include" ./configure --with-bcg729 && \
+    CFLAGS="-I/usr/src/asterisk/include" ./configure --with-bcg729 && \
     make && \
     make install
 
