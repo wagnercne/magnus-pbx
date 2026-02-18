@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # 1. Dependências e correção de tempo
 RUN echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore-time && \
     apt-get update && apt-get install -y \
-    build-essential wget curl uuid-dev libxml2-dev libncurses-dev \
+    build-essential wget curl uuid-dev libxml2-dev libncurses5-dev \
     libsqlite3-dev libssl-dev libjansson-dev libedit-dev libpq-dev \
     python3-dev pkg-config subversion libbcg729-dev libopus-dev \
     autoconf automake libtool recode libasound2-dev libnewt-dev git && \
@@ -33,7 +33,7 @@ RUN mkdir -p /usr/src/asterisk-g72x && \
     tar -zxf /tmp/g729.tar.gz -C /usr/src/asterisk-g72x --strip-components=1 && \
     cd /usr/src/asterisk-g72x && \
     ./autogen.sh && \
-    CFLAGS="-I/usr/src/asterisk-22.*/include" ./configure --with-bcg729 && \
+    CFLAGS="-I/usr/src/asterisk/include" ./configure --with-bcg729 && \
     make && \
     make install
 

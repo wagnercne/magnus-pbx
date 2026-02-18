@@ -21,7 +21,7 @@ RUN echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore
     ca-certificates \
     uuid-dev \
     libxml2-dev \
-    libncurses-dev \
+    libncurses5-dev \
     libsqlite3-dev \
     libssl-dev \
     libjansson-dev \
@@ -47,7 +47,7 @@ RUN wget "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22-curre
     tar -zxf "asterisk-22-current.tar.gz" && \
     cd asterisk-22.* && \
     ./contrib/scripts/get_mp3_source.sh && \
-    (yes | ./contrib/scripts/install_prereq install || true) && \
+    ./contrib/scripts/install_prereq install && \
     ./configure \
         --with-pjproject-bundled \
         --with-postgres \
@@ -68,9 +68,11 @@ RUN wget "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22-curre
     rm -rf /usr/src/*
 
 # 3. Codec G.729
-WORKDIR /usr/src/asterisk-g72x
-RUN wget https://github.com/arkadijs/asterisk-g72x/archive/refs/heads/master.tar.gz -O /tmp/g729.tar.gz && \
-    tar -zxf /tmp/g729.tar.gz -C /usr/src/asterisk-g72x --strip-components=1 && \
+WORKDIR /usr/src
+RUN mkdir -p asterisk-g72x && \
+    wget https://github.com/arkadijs/asterisk-g72x/archive/refs/heads/master.tar.gz -O /tmp/g729.tar.gz && \
+    tar -zxf /tmp/g729.tar.gz -C asterisk-g72x --strip-components=1 && \
+    cd asterisk-g72x && \
     ./autogen.sh && \
     CFLAGS="-I/usr/include/asterisk" ./configure --with-bcg729 && \
     make && \
@@ -88,7 +90,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # 1. Dependências de runtime (apenas o necessário)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2 \
-    libncurses6 \
+    libncurses5 \
     libsqlite3-0 \
     libssl3 \
     libjansson4 \
@@ -96,7 +98,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
     libbcg729-0 \
     libopus0 \
-    libasound2t64 \
+    libasound2 \
     libnewt0.52 \
     ca-certificates \
     curl \
