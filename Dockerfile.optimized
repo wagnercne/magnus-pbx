@@ -71,7 +71,7 @@ RUN wget "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22-curre
     tar -zxf /tmp/g729.tar.gz -C asterisk-g72x --strip-components=1 && \
     cd asterisk-g72x && \
     ./autogen.sh && \
-    CFLAGS="-I/usr/include/asterisk" ./configure --with-bcg729 && \
+    CFLAGS="-I/usr/local/include/asterisk" ./configure --with-bcg729 && \
     make && \
     make install && \
     rm -rf /tmp/g729.tar.gz /usr/src/*
