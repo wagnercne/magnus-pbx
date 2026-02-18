@@ -84,7 +84,40 @@ INSERT INTO ps_domain_aliases (id, domain) VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- ==========================================================
--- 7. FILA DE ATENDIMENTO (EXEMPLO)
+-- 7. ENDPOINT IDENTIFICATION (Multi-Tenant por IP)
+-- ==========================================================
+-- SOLUÇÃO PARA SOFTPHONES QUE NÃO ENVIAM @tenant NO USERNAME
+-- 
+-- Quando softphone registra com username=1002 (sem @belavista),
+-- Asterisk usa o IP de origem para identificar o endpoint correto.
+--
+-- Exemplo: IP 192.168.15.100 -> endpoint=1001@belavista
+--
+-- MATCH PATTERNS:
+-- - IP exato: '192.168.15.100'
+-- - Subnet: '192.168.15.0/24'
+-- - Range: '192.168.15.100-192.168.15.200'
+-- ==========================================================
+
+-- Exemplo: Mapear range de IPs para tenants específicos
+-- (Descomente e ajuste conforme sua rede)
+
+-- Tenant Belavista: IPs 192.168.15.1-192.168.15.99
+-- INSERT INTO ps_identify (id, endpoint, match) VALUES
+--     ('id_bv_network', '1001@belavista', '192.168.15.0/26');
+
+-- Tenant ACME: IPs 192.168.15.100-192.168.15.199  
+-- INSERT INTO ps_identify (id, endpoint, match) VALUES
+--     ('id_acme_network', '2001@acme', '192.168.15.100/26');
+
+-- OU usar IP exato por ramal (para testes):
+-- INSERT INTO ps_identify (id, endpoint, match) VALUES
+--     ('id_1001', '1001@belavista', '192.168.15.100'),
+--     ('id_1002', '1002@belavista', '192.168.15.101'),
+--     ('id_2001', '2001@acme', '192.168.15.200');
+
+-- ==========================================================
+-- 8. FILA DE ATENDIMENTO (EXEMPLO)
 -- ==========================================================
 INSERT INTO queues (name, tenant_id, strategy, timeout) VALUES
     ('suporte', 1, 'rrmemory', 30)
@@ -96,7 +129,7 @@ INSERT INTO queue_members (queue_name, interface) VALUES
 ON CONFLICT DO NOTHING;
 
 -- ==========================================================
--- 8. CDR DE TESTE (OPCIONAL - SIMULAÇÃO)
+-- 9. CDR DE TESTE (OPCIONAL - SIMULAÇÃO)
 -- ==========================================================
 -- Inserir alguns CDRs de exemplo para testar consultas
 INSERT INTO cdr (calldate, src, dst, dcontext, duration, billsec, disposition, uniqueid, linkedid, tenant_id) VALUES
