@@ -21,7 +21,6 @@ RUN wget "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22-curre
     tar -zxf "asterisk-22-current.tar.gz" && \
     cd asterisk-22.* && \
     ./contrib/scripts/get_mp3_source.sh && \
-    ./contrib/scripts/install_prereq install && \
     ./configure --with-pjproject-bundled --with-postgres --with-bcg729 --with-opus && \
     make menuselect.makeopts && \
     menuselect/menuselect --enable format_mp3 --enable res_config_pgsql asterisk.makeopts && \
