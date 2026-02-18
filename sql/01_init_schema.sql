@@ -116,11 +116,22 @@ CREATE TABLE queues (
 COMMENT ON TABLE queues IS 'Filas de atendimento (call queues)';
 
 CREATE TABLE queue_members (
+    uniqueid SERIAL PRIMARY KEY,
     queue_name VARCHAR(128) REFERENCES queues(name),
-    interface VARCHAR(128),
-    uniqueid SERIAL PRIMARY KEY
+    interface VARCHAR(128) NOT NULL,
+    membername VARCHAR(128),
+    state_interface VARCHAR(128),
+    penalty INT DEFAULT 0,
+    paused CHAR(1) DEFAULT '0',
+    reason_paused VARCHAR(80),
+    wrapuptime INT DEFAULT 0,
+    ringinuse CHAR(1) DEFAULT '1',
+    ignorebusy CHAR(1) DEFAULT '0'
 );
 COMMENT ON TABLE queue_members IS 'Membros das filas (agentes)';
+
+CREATE INDEX idx_queue_members_name ON queue_members(queue_name);
+CREATE INDEX idx_queue_members_interface ON queue_members(interface);
 
 -- ==========================================================
 -- 5. CDR - CALL DETAIL RECORDS (RELATÓRIOS DE CHAMADAS)
