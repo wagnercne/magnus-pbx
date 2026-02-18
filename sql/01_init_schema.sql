@@ -38,7 +38,8 @@ CREATE TABLE ps_endpoints (
     force_rport BOOLEAN DEFAULT true,
     rewrite_contact BOOLEAN DEFAULT true,
     rtp_symmetric BOOLEAN DEFAULT true,
-    ice_support BOOLEAN DEFAULT true
+    ice_support BOOLEAN DEFAULT true,
+    mailboxes VARCHAR(200) DEFAULT NULL
 );
 COMMENT ON TABLE ps_endpoints IS 'PJSIP Endpoints (ramais SIP/WebRTC)';
 
