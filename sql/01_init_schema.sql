@@ -60,6 +60,27 @@ CREATE TABLE ps_aors (
 );
 COMMENT ON TABLE ps_aors IS 'Address of Record - Gerencia registro de dispositivos';
 
+CREATE TABLE ps_contacts (
+    id VARCHAR(255) PRIMARY KEY,
+    uri VARCHAR(511),
+    expiration_time BIGINT,
+    qualify_frequency INT,
+    outbound_proxy VARCHAR(255),
+    path TEXT,
+    user_agent VARCHAR(255),
+    reg_server VARCHAR(255),
+    authenticate_qualify BOOLEAN DEFAULT false,
+    via_addr VARCHAR(255),
+    via_port INT,
+    call_id VARCHAR(255),
+    endpoint VARCHAR(40),
+    prune_on_boot BOOLEAN DEFAULT true
+);
+COMMENT ON TABLE ps_contacts IS 'Contatos dinâmicos registrados (realtime)';
+
+CREATE INDEX idx_ps_contacts_endpoint ON ps_contacts(endpoint);
+CREATE INDEX idx_ps_contacts_expiration ON ps_contacts(expiration_time);
+
 CREATE TABLE ps_domain_aliases (
     id VARCHAR(80) PRIMARY KEY,
     domain VARCHAR(80)
