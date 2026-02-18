@@ -162,4 +162,4 @@ USER asterisk
 WORKDIR /var/lib/asterisk
 
 # 10. Comando inicial
-CMD ["asterisk", "-f", "-vvv", "-u", "asterisk"]
+CMD ["asterisk", "-f", "-vvv"]
