@@ -21,7 +21,7 @@ RUN echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore
     ca-certificates \
     uuid-dev \
     libxml2-dev \
-    libncurses5-dev \
+    libncurses-dev \
     libsqlite3-dev \
     libssl-dev \
     libjansson-dev \
@@ -90,7 +90,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # 1. Dependências de runtime (apenas o necessário)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2 \
-    libncurses5 \
+    libncurses6 \
     libsqlite3-0 \
     libssl3 \
     libjansson4 \
@@ -98,7 +98,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
     libbcg729-0 \
     libopus0 \
-    libasound2 \
+    libasound2t64 \
     libnewt0.52 \
     ca-certificates \
     curl \
