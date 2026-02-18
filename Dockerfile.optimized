@@ -7,7 +7,6 @@ FROM ubuntu:24.04 AS builder
 
 # Variáveis de ambiente
 ENV DEBIAN_FRONTEND=noninteractive
-ENV ASTERISK_VERSION=22.1.0
 
 # =================================================================
 # STAGE 1: BUILD (Compilação)
@@ -44,9 +43,9 @@ RUN echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore
 
 # 2. Download e compilação do Asterisk
 WORKDIR /usr/src
-RUN wget "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-${ASTERISK_VERSION}.tar.gz" && \
-    tar -zxf "asterisk-${ASTERISK_VERSION}.tar.gz" && \
-    cd "asterisk-${ASTERISK_VERSION}" && \
+RUN wget "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22-current.tar.gz" && \
+    tar -zxf "asterisk-22-current.tar.gz" && \
+    cd asterisk-22.* && \
     ./contrib/scripts/get_mp3_source.sh && \
     ./contrib/scripts/install_prereq install && \
     ./configure \

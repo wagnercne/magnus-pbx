@@ -17,10 +17,9 @@ RUN groupadd -r asterisk && \
 
 # 3. Asterisk 22 LTS
 WORKDIR /usr/src
-RUN wget http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22-current.tar.gz && \
-    tar -zxvf asterisk-22-current.tar.gz && \
-    ln -s asterisk-22.* asterisk && \
-    cd asterisk && \
+RUN wget "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22-current.tar.gz" && \
+    tar -zxf "asterisk-22-current.tar.gz" && \
+    cd asterisk-22.* && \
     ./contrib/scripts/get_mp3_source.sh && \
     ./contrib/scripts/install_prereq install && \
     ./configure --with-pjproject-bundled --with-postgres --with-bcg729 --with-opus && \
@@ -33,17 +32,17 @@ RUN wget http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22-curren
 # 4. Codec G.729 (Link arkadijs + Fix de headers)
 RUN mkdir -p /usr/src/asterisk-g72x && \
     wget https://github.com/arkadijs/asterisk-g72x/archive/refs/heads/master.tar.gz -O /tmp/g729.tar.gz && \
-    tar -zxvf /tmp/g729.tar.gz -C /usr/src/asterisk-g72x --strip-components=1 && \
+    tar -zxf /tmp/g729.tar.gz -C /usr/src/asterisk-g72x --strip-components=1 && \
     cd /usr/src/asterisk-g72x && \
     ./autogen.sh && \
-    CFLAGS="-I/usr/src/asterisk/include" ./configure --with-bcg729 && \
+    CFLAGS="-I/usr/src/asterisk-22.*/include" ./configure --with-bcg729 && \
     make && \
     make install
 
 # 5. Sons PT-BR (GitHub Marcel Savegnago)
 RUN mkdir -p /var/lib/asterisk/sounds/pt_BR && \
     wget https://github.com/marcelsavegnago/issabel_sounds_pt_BR/archive/refs/heads/master.tar.gz -O /tmp/sounds.tar.gz && \
-    tar -zxvf /tmp/sounds.tar.gz -C /var/lib/asterisk/sounds/pt_BR --strip-components=1 && \
+    tar -zxf /tmp/sounds.tar.gz -C /var/lib/asterisk/sounds/pt_BR --strip-components=1 && \
     rm -rf /tmp/sounds.tar.gz /tmp/g729.tar.gz
 
 # 6. Permiss�es Finais (Agora com o usu�rio criado)
