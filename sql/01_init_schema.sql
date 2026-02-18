@@ -75,7 +75,9 @@ CREATE TABLE ps_contacts (
     via_port INT,
     call_id VARCHAR(255),
     endpoint VARCHAR(40),
-    prune_on_boot BOOLEAN DEFAULT true
+    prune_on_boot BOOLEAN DEFAULT true,
+    qualify_timeout NUMERIC(10,2) DEFAULT 3.0,
+    qualify_2xx_only BOOLEAN DEFAULT true
 );
 COMMENT ON TABLE ps_contacts IS 'Contatos dinâmicos registrados (realtime)';
 
