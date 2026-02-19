@@ -1,0 +1,36 @@
+# ============================================================================
+# COMANDOS MIKROTIK - COPIAR E COLAR
+# ============================================================================
+# Execute estes comandos no terminal do MikroTik (SSH ou WinBox Terminal)
+# ============================================================================
+
+# 1. Habilitar DNS remoto
+/ip dns set allow-remote-requests=yes
+
+# 2. Adicionar registros estáticos DNS
+/ip dns static add name=belavista.magnussystem.com.br address=10.3.2.253 ttl=5m
+/ip dns static add name=acme.magnussystem.com.br address=10.3.2.253 ttl=5m
+/ip dns static add name=techno.magnussystem.com.br address=10.3.2.253 ttl=5m
+/ip dns static add name=pbx.magnussystem.com.br address=10.3.2.253 ttl=5m
+/ip dns static add name=pbx-api.magnussystem.com.br address=10.3.2.253 ttl=5m
+
+# 3. Limpar cache DNS
+/ip dns cache flush
+
+# 4. Verificar registros criados
+/ip dns static print
+
+# 5. Testar resolução
+/ping belavista.magnussystem.com.br count=4
+
+# ============================================================================
+# RESULTADO ESPERADO no "print":
+# ============================================================================
+# Flags: D - dynamic, X - disabled, R - regexp
+#  #   NAME                              ADDRESS          TTL
+#  0   belavista.magnussystem.com.br     10.3.2.253       5m
+#  1   acme.magnussystem.com.br          10.3.2.253       5m
+#  2   techno.magnussystem.com.br        10.3.2.253       5m
+#  3   pbx.magnussystem.com.br           10.3.2.253       5m
+#  4   pbx-api.magnussystem.com.br       10.3.2.253       5m
+# ============================================================================
