@@ -91,16 +91,16 @@ CREATE TABLE ps_domain_aliases (
 );
 COMMENT ON TABLE ps_domain_aliases IS 'Aliases de domínio para roteamento multi-tenant';
 
-CREATE TABLE ps_identify (
+CREATE TABLE ps_endpoint_id_ips (
     id VARCHAR(255) PRIMARY KEY,
     endpoint VARCHAR(255),
     match VARCHAR(255),
     srv_lookups BOOLEAN DEFAULT false,
     match_header VARCHAR(255)
 );
-CREATE INDEX idx_ps_identify_endpoint ON ps_identify(endpoint);
-CREATE INDEX idx_ps_identify_match ON ps_identify(match);
-COMMENT ON TABLE ps_identify IS 'Identificação de endpoints por IP/subnet (multi-tenant)';
+CREATE INDEX idx_ps_endpoint_id_ips_endpoint ON ps_endpoint_id_ips(endpoint);
+CREATE INDEX idx_ps_endpoint_id_ips_match ON ps_endpoint_id_ips(match);
+COMMENT ON TABLE ps_endpoint_id_ips IS 'Identificação de endpoints por IP/subnet (multi-tenant)';
 
 -- ==========================================================
 -- 3. DIALPLAN REALTIME (LÓGICA DE ROTEAMENTO)

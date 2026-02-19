@@ -109,15 +109,15 @@ ON CONFLICT (id) DO UPDATE SET
 -- (Descomente e ajuste conforme sua rede)
 
 -- Tenant Belavista: IPs 192.168.15.1-192.168.15.99
--- INSERT INTO ps_identify (id, endpoint, match) VALUES
+-- INSERT INTO ps_endpoint_id_ips (id, endpoint, match) VALUES
 --     ('id_bv_network', '1001@belavista', '192.168.15.0/26');
 
 -- Tenant ACME: IPs 192.168.15.100-192.168.15.199  
--- INSERT INTO ps_identify (id, endpoint, match) VALUES
+-- INSERT INTO ps_endpoint_id_ips (id, endpoint, match) VALUES
 --     ('id_acme_network', '2001@acme', '192.168.15.100/26');
 
 -- OU usar IP exato por ramal (para testes):
--- INSERT INTO ps_identify (id, endpoint, match) VALUES
+-- INSERT INTO ps_endpoint_id_ips (id, endpoint, match) VALUES
 --     ('id_1001', '1001@belavista', '192.168.15.100'),
 --     ('id_1002', '1002@belavista', '192.168.15.101'),
 --     ('id_2001', '2001@acme', '192.168.15.200');
