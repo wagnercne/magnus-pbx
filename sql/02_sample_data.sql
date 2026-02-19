@@ -18,60 +18,60 @@ ON CONFLICT (domain) DO NOTHING;
 -- 2. RAMAL 1001@belavista (WebRTC)
 -- ==========================================================
 INSERT INTO ps_auths (id, tenant_id, auth_type, username, password) VALUES
-    ('1001@belavista', 1, 'userpass', '1001', 'magnus123')
+    ('1001@belavista', 1, 'userpass', 'belavista_1001', 'magnus123')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO ps_aors (id, tenant_id, max_contacts, remove_existing) VALUES
     ('1001@belavista', 1, 5, true)
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, disallow, allow, webrtc, dtls_auto_generate_cert) VALUES
-    ('1001@belavista', 1, 'transport-wss', '1001@belavista', '1001@belavista', 'ctx-belavista', 'all', 'opus,g722,ulaw', 'yes', 'yes')
+INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, identify_by, disallow, allow, webrtc, dtls_auto_generate_cert) VALUES
+    ('1001@belavista', 1, 'transport-wss', '1001@belavista', '1001@belavista', 'ctx-belavista', 'auth_username,username', 'all', 'opus,g722,ulaw', 'yes', 'yes')
 ON CONFLICT (id) DO NOTHING;
 
 -- ==========================================================
 -- 3. RAMAL 1002@belavista (SIP tradicional)
 -- ==========================================================
 INSERT INTO ps_auths (id, tenant_id, auth_type, username, password) VALUES
-    ('1002@belavista', 1, 'userpass', '1002', 'magnus123')
+    ('1002@belavista', 1, 'userpass', 'belavista_1002', 'magnus123')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO ps_aors (id, tenant_id, max_contacts, remove_existing) VALUES
     ('1002@belavista', 1, 2, true)
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, disallow, allow) VALUES
-    ('1002@belavista', 1, 'transport-udp', '1002@belavista', '1002@belavista', 'ctx-belavista', 'all', 'ulaw,alaw,gsm')
+INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, identify_by, disallow, allow) VALUES
+    ('1002@belavista', 1, 'transport-udp', '1002@belavista', '1002@belavista', 'ctx-belavista', 'auth_username,username', 'all', 'ulaw,alaw,gsm')
 ON CONFLICT (id) DO NOTHING;
 
 -- ==========================================================
 -- 4. RAMAL 2001@acme
 -- ==========================================================
 INSERT INTO ps_auths (id, tenant_id, auth_type, username, password) VALUES
-    ('2001@acme', 2, 'userpass', '2001', 'acme2001')
+    ('2001@acme', 2, 'userpass', 'acme_2001', 'acme2001')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO ps_aors (id, tenant_id, max_contacts, remove_existing) VALUES
     ('2001@acme', 2, 1, true)
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, disallow, allow) VALUES
-    ('2001@acme', 2, 'transport-udp', '2001@acme', '2001@acme', 'ctx-acme', 'all', 'ulaw,alaw')
+INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, identify_by, disallow, allow) VALUES
+    ('2001@acme', 2, 'transport-udp', '2001@acme', '2001@acme', 'ctx-acme', 'auth_username,username', 'all', 'ulaw,alaw')
 ON CONFLICT (id) DO NOTHING;
 
 -- ==========================================================
 -- 5. RAMAL 3001@techno (WebRTC)
 -- ==========================================================
 INSERT INTO ps_auths (id, tenant_id, auth_type, username, password) VALUES
-    ('3001@techno', 3, 'userpass', '3001', 'techno3001')
+    ('3001@techno', 3, 'userpass', 'techno_3001', 'techno3001')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO ps_aors (id, tenant_id, max_contacts, remove_existing) VALUES
     ('3001@techno', 3, 5, true)
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, disallow, allow, webrtc, dtls_auto_generate_cert) VALUES
-    ('3001@techno', 3, 'transport-wss', '3001@techno', '3001@techno', 'ctx-techno', 'all', 'opus,vp8', 'yes', 'yes')
+INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, identify_by, disallow, allow, webrtc, dtls_auto_generate_cert) VALUES
+    ('3001@techno', 3, 'transport-wss', '3001@techno', '3001@techno', 'ctx-techno', 'auth_username,username', 'all', 'opus,vp8', 'yes', 'yes')
 ON CONFLICT (id) DO NOTHING;
 
 -- ==========================================================
@@ -166,10 +166,10 @@ BEGIN
     RAISE NOTICE '   - % CDRs de exemplo', total_cdrs;
     RAISE NOTICE '';
     RAISE NOTICE '🔑 Credenciais de teste:';
-    RAISE NOTICE '   - 1001@belavista / magnus123 (WebRTC)';
-    RAISE NOTICE '   - 1002@belavista / magnus123 (SIP)';
-    RAISE NOTICE '   - 2001@acme / acme2001';
-    RAISE NOTICE '   - 3001@techno / techno3001 (WebRTC)';
+    RAISE NOTICE '   - UserID=1001 / AuthID=belavista_1001 / Pass=magnus123';
+    RAISE NOTICE '   - UserID=1002 / AuthID=belavista_1002 / Pass=magnus123';
+    RAISE NOTICE '   - UserID=2001 / AuthID=acme_2001 / Pass=acme2001';
+    RAISE NOTICE '   - UserID=3001 / AuthID=techno_3001 / Pass=techno3001';
     RAISE NOTICE '';
     RAISE NOTICE '🎯 Configure seu softphone e disque *43 para teste!';
 END $$;

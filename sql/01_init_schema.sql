@@ -31,6 +31,7 @@ CREATE TABLE ps_endpoints (
     aors VARCHAR(200),
     auth VARCHAR(40),
     context VARCHAR(40),
+    identify_by VARCHAR(80) DEFAULT 'auth_username,username',
     disallow VARCHAR(200) DEFAULT 'all',
     allow VARCHAR(200) DEFAULT 'opus,g722,ulaw,alaw,vp8,h264',
     webrtc VARCHAR(10) DEFAULT 'yes',
@@ -41,7 +42,7 @@ CREATE TABLE ps_endpoints (
     ice_support BOOLEAN DEFAULT true,
     mailboxes VARCHAR(200) DEFAULT NULL
 );
-COMMENT ON TABLE ps_endpoints IS 'PJSIP Endpoints (ramais SIP/WebRTC)';
+COMMENT ON TABLE ps_endpoints IS 'PJSIP Endpoints (ramais SIP/WebRTC). Recomendado identify_by=auth_username,username para SaaS.';
 
 CREATE TABLE ps_auths (
     id VARCHAR(40) PRIMARY KEY,
