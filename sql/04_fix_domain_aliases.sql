@@ -3,23 +3,41 @@
 -- Executar quando o banco já existe com domínios errados
 -- =================================================================
 
+-- Garantir coluna esperada pelo PJSIP realtime
+ALTER TABLE ps_domain_aliases
+ADD COLUMN IF NOT EXISTS domain_alias VARCHAR(80);
+
 -- Mostrar estado atual
-SELECT 'ANTES:' as status, id, domain FROM ps_domain_aliases;
+SELECT 'ANTES:' as status, id, domain_alias, domain FROM ps_domain_aliases;
 
 -- Corrigir para o domínio real usado no DNS do MikroTik
-UPDATE ps_domain_aliases 
-SET domain = id || '.magnussystem.com.br'
-WHERE domain LIKE '%.magnus.local' OR domain NOT LIKE '%.magnussystem.com.br';
+UPDATE ps_domain_aliases
+SET
+    domain_alias = COALESCE(domain_alias, domain, id || '.magnussystem.com.br'),
+    domain = COALESCE(domain, domain_alias, id || '.magnussystem.com.br');
+
+UPDATE ps_domain_aliases
+SET
+    domain_alias = id || '.magnussystem.com.br',
+    domain = id || '.magnussystem.com.br'
+WHERE
+    domain_alias LIKE '%.magnus.local'
+    OR domain_alias NOT LIKE '%.magnussystem.com.br';
 
 -- Inserir se não existirem
-INSERT INTO ps_domain_aliases (id, domain) VALUES
-    ('belavista', 'belavista.magnussystem.com.br'),
-    ('acme',      'acme.magnussystem.com.br'),
-    ('techno',    'techno.magnussystem.com.br')
-ON CONFLICT (id) DO UPDATE SET domain = EXCLUDED.domain;
+INSERT INTO ps_domain_aliases (id, domain_alias, domain) VALUES
+    ('belavista', 'belavista.magnussystem.com.br', 'belavista.magnussystem.com.br'),
+    ('acme',      'acme.magnussystem.com.br', 'acme.magnussystem.com.br'),
+    ('techno',    'techno.magnussystem.com.br', 'techno.magnussystem.com.br')
+ON CONFLICT (id) DO UPDATE SET
+    domain_alias = EXCLUDED.domain_alias,
+    domain = EXCLUDED.domain;
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_ps_domain_aliases_domain_alias
+ON ps_domain_aliases(domain_alias);
 
 -- Mostrar estado corrigido
-SELECT 'DEPOIS:' as status, id, domain FROM ps_domain_aliases;
+SELECT 'DEPOIS:' as status, id, domain_alias, domain FROM ps_domain_aliases;
 
 -- =================================================================
 -- Verificação completa de saúde do multi-tenant
@@ -28,8 +46,8 @@ SELECT 'DEPOIS:' as status, id, domain FROM ps_domain_aliases;
 -- 1. Domain aliases estão corretos?
 SELECT 
     da.id as slug,
-    da.domain,
-    CASE WHEN da.domain LIKE '%.magnussystem.com.br' 
+    da.domain_alias,
+    CASE WHEN da.domain_alias LIKE '%.magnussystem.com.br' 
          THEN '✓ OK' ELSE '✗ DOMÍNIO ERRADO' END as status
 FROM ps_domain_aliases da;
 

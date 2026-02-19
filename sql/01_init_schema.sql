@@ -86,6 +86,7 @@ CREATE INDEX idx_ps_contacts_expiration ON ps_contacts(expiration_time);
 
 CREATE TABLE ps_domain_aliases (
     id VARCHAR(80) PRIMARY KEY,
+    domain_alias VARCHAR(80) UNIQUE,
     domain VARCHAR(80)
 );
 COMMENT ON TABLE ps_domain_aliases IS 'Aliases de domínio para roteamento multi-tenant';
