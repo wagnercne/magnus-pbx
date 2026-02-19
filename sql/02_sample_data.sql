@@ -25,8 +25,8 @@ INSERT INTO ps_aors (id, tenant_id, max_contacts, remove_existing) VALUES
     ('1001@belavista', 1, 5, true)
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, identify_by, disallow, allow, webrtc, dtls_auto_generate_cert) VALUES
-    ('1001@belavista', 1, 'transport-wss', '1001@belavista', '1001@belavista', 'ctx-belavista', 'auth_username,username', 'all', 'opus,g722,ulaw', 'yes', 'yes')
+INSERT INTO ps_endpoints (id, tenant_id, tenantid, transport, aors, auth, context, identify_by, disallow, allow, webrtc, dtls_auto_generate_cert) VALUES
+    ('1001@belavista', 1, 'belavista', 'transport-wss', '1001@belavista', '1001@belavista', 'ctx-belavista', 'auth_username,username', 'all', 'opus,g722,ulaw', 'yes', 'yes')
 ON CONFLICT (id) DO NOTHING;
 
 -- ==========================================================
@@ -40,8 +40,8 @@ INSERT INTO ps_aors (id, tenant_id, max_contacts, remove_existing) VALUES
     ('1002@belavista', 1, 2, true)
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, identify_by, disallow, allow) VALUES
-    ('1002@belavista', 1, 'transport-udp', '1002@belavista', '1002@belavista', 'ctx-belavista', 'auth_username,username', 'all', 'ulaw,alaw,gsm')
+INSERT INTO ps_endpoints (id, tenant_id, tenantid, transport, aors, auth, context, identify_by, disallow, allow) VALUES
+    ('1002@belavista', 1, 'belavista', 'transport-udp', '1002@belavista', '1002@belavista', 'ctx-belavista', 'auth_username,username', 'all', 'ulaw,alaw,gsm')
 ON CONFLICT (id) DO NOTHING;
 
 -- ==========================================================
@@ -55,8 +55,8 @@ INSERT INTO ps_aors (id, tenant_id, max_contacts, remove_existing) VALUES
     ('2001@acme', 2, 1, true)
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, identify_by, disallow, allow) VALUES
-    ('2001@acme', 2, 'transport-udp', '2001@acme', '2001@acme', 'ctx-acme', 'auth_username,username', 'all', 'ulaw,alaw')
+INSERT INTO ps_endpoints (id, tenant_id, tenantid, transport, aors, auth, context, identify_by, disallow, allow) VALUES
+    ('2001@acme', 2, 'acme', 'transport-udp', '2001@acme', '2001@acme', 'ctx-acme', 'auth_username,username', 'all', 'ulaw,alaw')
 ON CONFLICT (id) DO NOTHING;
 
 -- ==========================================================
@@ -70,8 +70,8 @@ INSERT INTO ps_aors (id, tenant_id, max_contacts, remove_existing) VALUES
     ('3001@techno', 3, 5, true)
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, identify_by, disallow, allow, webrtc, dtls_auto_generate_cert) VALUES
-    ('3001@techno', 3, 'transport-wss', '3001@techno', '3001@techno', 'ctx-techno', 'auth_username,username', 'all', 'opus,vp8', 'yes', 'yes')
+INSERT INTO ps_endpoints (id, tenant_id, tenantid, transport, aors, auth, context, identify_by, disallow, allow, webrtc, dtls_auto_generate_cert) VALUES
+    ('3001@techno', 3, 'techno', 'transport-wss', '3001@techno', '3001@techno', 'ctx-techno', 'auth_username,username', 'all', 'opus,vp8', 'yes', 'yes')
 ON CONFLICT (id) DO NOTHING;
 
 -- ==========================================================

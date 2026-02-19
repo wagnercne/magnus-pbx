@@ -27,6 +27,7 @@ COMMENT ON TABLE tenants IS 'Tabela mestre para isolamento de clientes (SaaS Mul
 CREATE TABLE ps_endpoints (
     id VARCHAR(40) PRIMARY KEY,
     tenant_id INT REFERENCES tenants(id),
+    tenantid VARCHAR(80),
     transport VARCHAR(40),
     aors VARCHAR(200),
     auth VARCHAR(40),
