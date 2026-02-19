@@ -75,13 +75,17 @@ INSERT INTO ps_endpoints (id, tenant_id, transport, aors, auth, context, disallo
 ON CONFLICT (id) DO NOTHING;
 
 -- ==========================================================
--- 6. DOMAIN ALIASES (Para roteamento)
+-- 6. DOMAIN ALIASES (Para roteamento multi-tenant)
 -- ==========================================================
+-- CRÍTICO: 'domain' deve ser EXATAMENTE o que o softphone usa como servidor SIP
+-- Quando softphone registra em belavista.magnussystem.com.br com user=1001,
+-- Asterisk busca ps_domain_aliases WHERE domain='belavista.magnussystem.com.br'
+-- Encontra id='belavista' → monta endpoint id: 1001@belavista → ctx-belavista
 INSERT INTO ps_domain_aliases (id, domain) VALUES
-    ('belavista', 'belavista.magnus.local'),
-    ('acme', 'acme.magnus.local'),
-    ('techno', 'techno.magnus.local')
-ON CONFLICT (id) DO NOTHING;
+    ('belavista', 'belavista.magnussystem.com.br'),
+    ('acme', 'acme.magnussystem.com.br'),
+    ('techno', 'techno.magnussystem.com.br')
+ON CONFLICT (id) DO UPDATE SET domain = EXCLUDED.domain;
 
 -- ==========================================================
 -- 7. ENDPOINT IDENTIFICATION (Multi-Tenant por IP)
