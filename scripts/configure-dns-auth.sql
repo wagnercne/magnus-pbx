@@ -52,7 +52,7 @@ SELECT id, domain FROM ps_domain_aliases ORDER BY id;
 SELECT id, context, aors, auth, transport FROM ps_endpoints ORDER BY id;
 
 -- Verificar AORs
-SELECT id, max_contacts, qualify_frequency, authenticate_qualify FROM ps_aors ORDER BY id;
+SELECT id, max_contacts, qualify_frequency FROM ps_aors ORDER BY id;
 
 -- Verificar configuração completa de autenticação
 SELECT 
