@@ -32,15 +32,14 @@ SELECT id, username, auth_type FROM ps_auths ORDER BY id;
 -- SOLUÇÃO: Adicionar domínios magnussystem.com.br (produção)
 -- ============================================================================
 
--- Remover domínios antigos (.local)
-DELETE FROM ps_domain_aliases WHERE domain LIKE '%.magnus.local';
+-- Remover domínios antigos
+DELETE FROM ps_domain_aliases;
 
 -- Adicionar domínios de produção
 INSERT INTO ps_domain_aliases (id, domain) VALUES
     ('belavista', 'belavista.magnussystem.com.br'),
     ('acme', 'acme.magnussystem.com.br'),
-    ('techno', 'techno.magnussystem.com.br')
-ON CONFLICT (id, domain) DO NOTHING;
+    ('techno', 'techno.magnussystem.com.br');
 
 -- Verificar domínios configurados
 SELECT id, domain FROM ps_domain_aliases ORDER BY id;
