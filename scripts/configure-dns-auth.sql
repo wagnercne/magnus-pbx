@@ -4,10 +4,8 @@
 -- Este script configura o banco de dados para autenticação baseada em DNS
 -- onde softphones enviam username "1002" (sem @tenant) e o domínio no SIP
 --
--- Executar: docker exec -i postgres-magnus psql -U admin_magnus -d magnus_pbx < configure-dns-auth.sql
+-- Executar: docker exec -i postgres-magnus psql -U admin_magnus -d magnus_pbx < scripts/configure-dns-auth.sql
 -- ============================================================================
-
-BEGIN;
 
 -- ============================================================================
 -- 1. ATUALIZAR ps_auths: Corrigir campo username
@@ -51,71 +49,22 @@ SELECT id, domain FROM ps_domain_aliases ORDER BY id;
 -- Verificar endpoints
 SELECT id, context, aors, auth, transport FROM ps_endpoints ORDER BY id;
 
--- Verificar AORs
-SELECT id, max_contacts, qualify_frequency FROM ps_aors ORDER BY id;
-
--- Verificar configuração completa de autenticação
-SELECT 
-    e.id as endpoint,
-    e.context,
-    a.username,
-    a.password,
-    a.auth_type,
-    d.domain
-FROM ps_endpoints e
-LEFT JOIN ps_auths a ON e.id = a.id
-LEFT JOIN ps_domain_aliases d ON SPLIT_PART(e.id, '@', 2) = d.id
-ORDER BY e.id;
-
-COMMIT;
-
 -- ============================================================================
 -- RESULTADO ESPERADO:
 -- ============================================================================
--- Endpoint: 1001@belavista
---   Username: 1001 (sem @belavista)
---   Password: magnus123
---   Domain: belavista.magnussystem.com.br
+-- ps_auths:
+--   1001@belavista → username: 1001
+--   1002@belavista → username: 1002
+--   2001@acme → username: 2001
+--   3001@techno → username: 3001
 --
--- Endpoint: 1002@belavista  
---   Username: 1002 (sem @belavista)
---   Password: magnus123
---   Domain: belavista.magnussystem.com.br
+-- ps_domain_aliases:
+--   belavista → belavista.magnussystem.com.br
+--   acme → acme.magnussystem.com.br
+--   techno → techno.magnussystem.com.br
 --
--- Endpoint: 2001@acme
---   Username: 2001 (sem @acme)
---   Password: magnus456
---   Domain: acme.magnussystem.com.br
---
--- Endpoint: 3001@techno
---   Username: 3001 (sem @techno)
---   Password: magnus789
---   Domain: techno.magnussystem.com.br
--- ============================================================================
-
--- FLUXO DE AUTENTICAÇÃO DNS:
--- 
--- 1. Softphone configurado:
---    Servidor: belavista.magnussystem.com.br
---    Usuário: 1002
---    Senha: magnus123
---
--- 2. DNS resolve (MikroTik Static DNS):
---    belavista.magnussystem.com.br → 10.3.2.253
---
--- 3. SIP REGISTER enviado:
---    To: sip:1002@belavista.magnussystem.com.br
---    From: sip:1002@belavista.magnussystem.com.br
---    Authorization: username="1002"
---
--- 4. Asterisk recebe:
---    - Domain: belavista.magnussystem.com.br (do header SIP)
---    - Username: 1002 (do Authorization)
---
--- 5. Asterisk procura:
---    - ps_domain_aliases WHERE domain='belavista.magnussystem.com.br' → id='belavista'
---    - ps_endpoints WHERE id='1002@belavista' → encontrado!
---    - ps_auths WHERE id='1002@belavista' AND username='1002' → valida senha
---
--- 6. Resultado: AUTENTICADO ✅
+-- PRÓXIMOS PASSOS:
+-- 1. Recarregar Asterisk: docker exec asterisk-magnus asterisk -rx "module reload res_pjsip.so"
+-- 2. Configurar MikroTik Static DNS
+-- 3. Testar registro do softphone
 -- ============================================================================
