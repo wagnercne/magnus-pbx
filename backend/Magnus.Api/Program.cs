@@ -1,5 +1,7 @@
 using Magnus.Core.Entities;
 using Magnus.Infrastructure.Data;
+using Magnus.Pbx.Hubs;
+using Magnus.Pbx.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
