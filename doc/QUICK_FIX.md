@@ -197,4 +197,4 @@ docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx
 
 ---
 
-**Data:** 16/02/2026 | **Versão:** 1.0 | **Status:** ✅ Resolvido
+**Data:** 16/02/2026 | **Versão:** 1.0.0 | **Status:** ✅ Resolvido

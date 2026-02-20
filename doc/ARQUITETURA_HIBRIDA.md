@@ -355,5 +355,5 @@ MAGNUS-PBX/
 ---
 
 **Documentação criada em:** 17/02/2026
-**Versão:** 1.0
+**Versão:** 1.0.0
 **Autor:** GitHub Copilot + Magnus PBX Team

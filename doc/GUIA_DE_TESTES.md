@@ -340,5 +340,5 @@ docker stats asterisk-magnus
 ---
 
 **Data:** 16 de fevereiro de 2026  
-**Versão:** 1.0  
+**Versão:** 1.0.0  
 **Status:** Pronto para testes ✅
