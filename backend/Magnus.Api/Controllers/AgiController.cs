@@ -52,29 +52,52 @@ public class AgiController : ControllerBase
 
     /// <summary>
     /// Busca rota de saída para número discado
-    /// Retorna trunk a ser usado ou null
+    /// Retorna trunk e número normalizado
     /// </summary>
     [HttpGet("get-outbound-route")]
     public async Task<IActionResult> GetOutboundRoute(
-        [FromQuery] int tenantId,
-        [FromQuery] string number)
+        [FromQuery] int? tenantId,
+        [FromQuery] string? tenant,
+        [FromQuery] string number,
+        [FromQuery] string? format)
     {
-        if (tenantId <= 0 || string.IsNullOrEmpty(number))
+        if (string.IsNullOrEmpty(number))
         {
             return BadRequest(new { trunk = (string?)null, error = "Parâmetros inválidos" });
         }
 
-        _logger.LogInformation("AGI: Buscando rota de saída - TenantId={TenantId}, Number={Number}",
-            tenantId, number);
+        var tenantRef = tenantId.HasValue && tenantId.Value > 0
+            ? tenantId.Value.ToString()
+            : tenant;
 
-        var trunk = await _agiService.GetOutboundRouteAsync(tenantId, number);
+        if (string.IsNullOrWhiteSpace(tenantRef))
+        {
+            return BadRequest(new { trunk = (string?)null, error = "TenantId ou tenant é obrigatório" });
+        }
+
+        _logger.LogInformation("AGI: Buscando rota de saída - TenantRef={TenantRef}, Number={Number}",
+            tenantRef, number);
+
+        var decision = await _agiService.GetOutboundRouteDecisionAsync(tenantRef, number);
+
+        if (string.Equals(format, "text", StringComparison.OrdinalIgnoreCase))
+        {
+            if (string.IsNullOrWhiteSpace(decision.TrunkName))
+            {
+                return Content(string.Empty, "text/plain");
+            }
+
+            return Content($"{decision.TrunkName}|{decision.DialNumber}", "text/plain");
+        }
 
         return Ok(new
         {
-            trunk,
-            tenantId,
+            trunk = decision.TrunkName,
+            dialNumber = decision.DialNumber,
+            route = decision.RouteName,
+            tenant = tenantRef,
             number,
-            found = trunk != null
+            found = decision.TrunkName != null
         });
     }
 

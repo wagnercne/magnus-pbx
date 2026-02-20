@@ -1,5 +1,6 @@
 using Magnus.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 namespace Magnus.Pbx.Services;
 
@@ -77,33 +78,72 @@ public class AgiService
     /// <returns>Nome do trunk a usar ou null</returns>
     public async Task<string?> GetOutboundRouteAsync(int tenantId, string dialedNumber)
     {
+        var decision = await GetOutboundRouteDecisionAsync(tenantId.ToString(), dialedNumber);
+        return decision.TrunkName;
+    }
+
+    public async Task<OutboundRouteDecision> GetOutboundRouteDecisionAsync(string tenantRef, string dialedNumber)
+    {
         try
         {
-            // Busca rotas ativas do tenant ordenadas por prioridade
+            var tenantId = await ResolveTenantIdAsync(tenantRef);
+            if (tenantId == null)
+            {
+                _logger.LogWarning("Tenant nao encontrado para referencia {TenantRef}", tenantRef);
+                return new OutboundRouteDecision(null, dialedNumber, null);
+            }
+
+            var v2Decisions = await LoadV2CandidatesAsync(tenantId.Value);
+            if (v2Decisions.Count > 0)
+            {
+                foreach (var candidate in v2Decisions)
+                {
+                    if (!MatchesPattern(dialedNumber, candidate.Pattern))
+                    {
+                        continue;
+                    }
+
+                    var normalized = ApplyRule(dialedNumber, candidate.StripDigits, candidate.PrependDigits);
+                    _logger.LogInformation(
+                        "Outbound V2 match tenant={TenantId} route={RouteName} rule={RuleName} trunk={TrunkName} dial={Dialed}->{Normalized}",
+                        tenantId.Value,
+                        candidate.RouteName,
+                        candidate.RuleName,
+                        candidate.TrunkName,
+                        dialedNumber,
+                        normalized
+                    );
+
+                    return new OutboundRouteDecision(candidate.TrunkName, normalized, candidate.RouteName);
+                }
+            }
+
+            // Fallback legado para compatibilidade
             var routes = await _context.OutboundRoutes
-                .Where(r => r.TenantId == tenantId && r.IsActive)
+                .Where(r => r.TenantId == tenantId.Value && r.IsActive)
                 .OrderBy(r => r.Priority)
                 .ToListAsync();
 
             foreach (var route in routes)
             {
-                // Verifica se o número discado corresponde ao padrão
-                // Pattern pode ser: _9XXXXXXXX, _0800XXXXXXX, etc
                 if (MatchesPattern(dialedNumber, route.Pattern))
                 {
-                    _logger.LogInformation("Número {DialedNumber} corresponde à rota {RouteName}, usando trunk {TrunkName}",
-                        dialedNumber, route.Name, route.TrunkName);
-                    return route.TrunkName;
+                    _logger.LogInformation("Outbound legacy match tenant={TenantId} route={RouteName} trunk={TrunkName} dial={Dialed}",
+                        tenantId.Value,
+                        route.Name,
+                        route.TrunkName,
+                        dialedNumber);
+                    return new OutboundRouteDecision(route.TrunkName, dialedNumber, route.Name);
                 }
             }
 
-            _logger.LogWarning("Nenhuma rota encontrada para {TenantId}/{DialedNumber}", tenantId, dialedNumber);
-            return null;
+            _logger.LogWarning("Nenhuma rota outbound encontrada para tenant={TenantId} numero={DialedNumber}", tenantId.Value, dialedNumber);
+            return new OutboundRouteDecision(null, dialedNumber, null);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao buscar rota de saída: {TenantId}/{DialedNumber}", tenantId, dialedNumber);
-            return null;
+            _logger.LogError(ex, "Erro ao buscar rota outbound: {TenantRef}/{DialedNumber}", tenantRef, dialedNumber);
+            return new OutboundRouteDecision(null, dialedNumber, null);
         }
     }
 
@@ -219,4 +259,137 @@ public class AgiService
 
         return true;
     }
+
+    private static string ApplyRule(string dialedNumber, int stripDigits, string? prependDigits)
+    {
+        var result = dialedNumber;
+
+        if (stripDigits > 0)
+        {
+            if (stripDigits >= result.Length)
+            {
+                result = string.Empty;
+            }
+            else
+            {
+                result = result.Substring(stripDigits);
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(prependDigits))
+        {
+            result = prependDigits + result;
+        }
+
+        return result;
+    }
+
+    private async Task<int?> ResolveTenantIdAsync(string tenantRef)
+    {
+        if (int.TryParse(tenantRef, out var numericTenantId))
+        {
+            var exists = await _context.Tenants.AnyAsync(t => t.Id == numericTenantId && t.IsActive);
+            return exists ? numericTenantId : null;
+        }
+
+        var tenant = await _context.Tenants
+            .Where(t => t.Slug == tenantRef && t.IsActive)
+            .Select(t => new { t.Id })
+            .FirstOrDefaultAsync();
+
+        return tenant?.Id;
+    }
+
+    private async Task<List<OutboundV2Candidate>> LoadV2CandidatesAsync(int tenantId)
+    {
+        var candidates = new List<OutboundV2Candidate>();
+
+        if (!await TableExistsAsync("outbound_route_rules") || !await TableExistsAsync("outbound_route_trunks"))
+        {
+            return candidates;
+        }
+
+        await using var connection = _context.Database.GetDbConnection();
+        if (connection.State != System.Data.ConnectionState.Open)
+        {
+            await connection.OpenAsync();
+        }
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT
+                r.route_name,
+                rr.rule_name,
+                rr.pattern,
+                rr.strip_digits,
+                rr.prepend_digits,
+                rt.trunk_name,
+                r.priority AS route_priority,
+                rr.priority AS rule_priority,
+                rt.priority AS trunk_priority
+            FROM outbound_routes r
+            INNER JOIN outbound_route_rules rr ON rr.route_id = r.id
+            INNER JOIN outbound_route_trunks rt ON rt.route_id = r.id
+            WHERE r.tenant_id = @tenant_id
+              AND r.is_active = TRUE
+              AND rr.is_active = TRUE
+              AND rt.is_active = TRUE
+            ORDER BY r.priority, rr.priority, rt.priority";
+
+        var tenantParameter = command.CreateParameter();
+        tenantParameter.ParameterName = "@tenant_id";
+        tenantParameter.Value = tenantId;
+        command.Parameters.Add(tenantParameter);
+
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            candidates.Add(new OutboundV2Candidate(
+                RouteName: reader.GetString(0),
+                RuleName: reader.GetString(1),
+                Pattern: reader.GetString(2),
+                StripDigits: reader.IsDBNull(3) ? 0 : reader.GetInt32(3),
+                PrependDigits: reader.IsDBNull(4) ? null : reader.GetString(4),
+                TrunkName: reader.GetString(5)
+            ));
+        }
+
+        return candidates;
+    }
+
+    private async Task<bool> TableExistsAsync(string tableName)
+    {
+        await using var connection = _context.Database.GetDbConnection();
+        if (connection.State != System.Data.ConnectionState.Open)
+        {
+            await connection.OpenAsync();
+        }
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+              AND table_name = @table_name
+            LIMIT 1";
+
+        var parameter = command.CreateParameter();
+        parameter.ParameterName = "@table_name";
+        parameter.Value = tableName;
+        command.Parameters.Add(parameter);
+
+        var result = await command.ExecuteScalarAsync();
+        return result != null;
+    }
 }
+
+public record OutboundRouteDecision(string? TrunkName, string DialNumber, string? RouteName);
+
+internal record OutboundV2Candidate(
+    string RouteName,
+    string RuleName,
+    string Pattern,
+    int StripDigits,
+    string? PrependDigits,
+    string TrunkName
+);
