@@ -1,0 +1,9 @@
+
+[general]
+dbhost=127.0.0.1
+dbport=5432
+dbname=magnus_pbx
+dbuser=admin_magnus
+dbpass=magnus123
+dbappname=magnus_asterisk
+
