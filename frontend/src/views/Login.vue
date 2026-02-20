@@ -3,16 +3,7 @@
     <div class="login-shell">
       <section class="left-panel">
         <div class="brand-head">
-          <div class="brand-shield" aria-hidden="true">
-            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-              <path d="M60 8L102 24V56C102 82 84 103 60 112C36 103 18 82 18 56V24L60 8Z" class="shield"/>
-              <path d="M39 78V42H48L60 58L72 42H81V78H72V57L60 72L48 57V78H39Z" class="m-mark"/>
-            </svg>
-          </div>
-          <div>
-            <h1 class="brand-title">Magnus PBX</h1>
-            <p class="brand-subtitle">Secure Virtual Concierge</p>
-          </div>
+          <img class="brand-banner" :src="headerBrand" alt="Magnus PBX" />
         </div>
 
         <div class="welcome-block">
@@ -73,14 +64,7 @@
 
       <section class="right-panel" aria-hidden="true">
         <div class="hero-overlay"></div>
-        <div class="hero-logo">
-          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <path d="M100 12L168 37V88C168 130 139 164 100 180C61 164 32 130 32 88V37L100 12Z" class="shield"/>
-            <path d="M68 132V66H82L100 90L118 66H132V132H118V90L100 114L82 90V132H68Z" class="m-mark"/>
-          </svg>
-          <div class="signal signal-left"></div>
-          <div class="signal signal-right"></div>
-        </div>
+        <img class="hero-image" :src="rightHero" alt="Magnus PBX visual" />
       </section>
     </div>
   </div>
@@ -90,6 +74,8 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import rightHero from '@/assets/login-right-hero.jpeg';
+import headerBrand from '@/assets/login-header-brand.png';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -166,29 +152,14 @@ async function handleLogin() {
 }
 
 .brand-head {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  width: 100%;
 }
 
-.brand-shield {
-  width: 68px;
-  height: 68px;
-  filter: drop-shadow(0 0 12px rgba(87, 220, 255, 0.65));
-}
-
-.brand-title {
-  font-size: 2rem;
-  line-height: 1;
-  letter-spacing: 0.4px;
-  margin: 0;
-  font-weight: 800;
-}
-
-.brand-subtitle {
-  margin: 0.35rem 0 0;
-  color: #67edf8;
-  font-size: 1.25rem;
+.brand-banner {
+  width: min(500px, 100%);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 10px rgba(88, 224, 255, 0.35));
 }
 
 .welcome-block {
@@ -305,10 +276,7 @@ async function handleLogin() {
 
 .right-panel {
   position: relative;
-  background:
-    linear-gradient(130deg, rgba(9, 15, 27, 0.8), rgba(10, 16, 30, 0.74)),
-    radial-gradient(circle at 65% 35%, rgba(93, 226, 255, 0.35), transparent 35%),
-    linear-gradient(160deg, #0a1325 0%, #0a1322 60%, #0b1424 100%);
+  background: #0a1325;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -318,53 +286,16 @@ async function handleLogin() {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(163, 216, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(163, 216, 255, 0.08) 1px, transparent 1px);
-  background-size: 28px 28px;
-  opacity: 0.24;
+  background: linear-gradient(180deg, rgba(6, 10, 18, 0.15), rgba(6, 10, 18, 0.32));
+  z-index: 2;
 }
 
-.hero-logo {
-  position: relative;
-  width: min(420px, 72%);
-  z-index: 1;
-  filter: drop-shadow(0 0 20px rgba(89, 223, 255, 0.55));
-}
-
-.hero-logo svg {
+.hero-image {
   width: 100%;
-}
-
-.shield {
-  fill: rgba(12, 30, 56, 0.72);
-  stroke: #74ebff;
-  stroke-width: 4;
-}
-
-.m-mark {
-  fill: #81f2ff;
-}
-
-.signal {
-  position: absolute;
-  top: 50%;
-  width: 70px;
-  height: 70px;
-  border: 4px solid rgba(106, 236, 255, 0.7);
-  border-right: 0;
-  border-top-left-radius: 999px;
-  border-bottom-left-radius: 999px;
-  transform: translateY(-50%);
-}
-
-.signal-left {
-  left: -70px;
-}
-
-.signal-right {
-  right: -70px;
-  transform: translateY(-50%) rotate(180deg);
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 1;
 }
 
 .fade-enter-active,
@@ -393,14 +324,6 @@ async function handleLogin() {
 
   .left-panel {
     padding: 1.6rem;
-  }
-
-  .brand-title {
-    font-size: 1.7rem;
-  }
-
-  .brand-subtitle {
-    font-size: 1rem;
   }
 
   .welcome-block {
