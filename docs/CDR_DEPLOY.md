@@ -1,62 +1,62 @@
-# 📞 Guia de Implantação do CDR PostgreSQL
+﻿# ðŸ“ž Guia de ImplantaÃ§Ã£o do CDR PostgreSQL
 
-## ✅ Configurações Concluídas
+## âœ… ConfiguraÃ§Ãµes ConcluÃ­das
 
 ### 1. Estrutura de Banco de Dados
-- ✅ **sql/04_create_cdr_table.sql** - Tabela CDR completa com:
+- âœ… **sql/04_create_cdr_table.sql** - Tabela CDR completa com:
   - 20+ colunas (calldate, src, dst, duration, billsec, disposition, etc)
-  - 7 índices (calldate, src, dst, uniqueid, linkedid, dcontext, disposition)
-  - View `cdr_readable` com labels em português
-  - Permissões para `admin_magnus`
+  - 7 Ã­ndices (calldate, src, dst, uniqueid, linkedid, dcontext, disposition)
+  - View `cdr_readable` com labels em portuguÃªs
+  - PermissÃµes para `admin_magnus`
 
-### 2. Configuração do Asterisk
-- ✅ **asterisk_etc/cdr_pgsql.conf** - Conexão com banco
+### 2. ConfiguraÃ§Ã£o do Asterisk
+- âœ… **asterisk_etc/cdr_pgsql.conf** - ConexÃ£o com banco
   - hostname: postgres-magnus
   - database: magnus_pbx
   - table: cdr
   - user: admin_magnus
   
-- ✅ **asterisk_etc/modules.conf** - Módulos CDR carregados
+- âœ… **asterisk_etc/modules.conf** - MÃ³dulos CDR carregados
   - `load => app_cdr.so`
   - `load => cdr_custom.so`
   - `load => cdr_pgsql.so`
   
-- ✅ **asterisk_etc/cdr.conf** - Log habilitado
-  - `unanswered = yes` - Log de chamadas não atendidas
+- âœ… **asterisk_etc/cdr.conf** - Log habilitado
+  - `unanswered = yes` - Log de chamadas nÃ£o atendidas
   - `congestion = yes` - Log de chamadas congestionadas
   - `[csv]` mantido como backup
 
-### 3. Scripts e Documentação
-- ✅ **scripts/config-cdr-pgsql.sh** - Automação da configuração
-- ✅ **scripts/deploy.sh** - Verificação de módulo CDR
-- ✅ **doc/CDR_QUERIES.md** - 50+ consultas SQL de exemplo
+### 3. Scripts e DocumentaÃ§Ã£o
+- âœ… **scripts/config-cdr-pgsql.sh** - AutomaÃ§Ã£o da configuraÃ§Ã£o
+- âœ… **scripts/deploy.sh** - VerificaÃ§Ã£o de mÃ³dulo CDR
+- âœ… **docs/CDR_QUERIES.md** - 50+ consultas SQL de exemplo
 
 ### 4. Docker Compose
-- ✅ Volume montado: `./sql:/docker-entrypoint-initdb.d`
-  - SQL será executado automaticamente na primeira criação do container
+- âœ… Volume montado: `./sql:/docker-entrypoint-initdb.d`
+  - SQL serÃ¡ executado automaticamente na primeira criaÃ§Ã£o do container
 
-## 🚀 Próximos Passos na VM
+## ðŸš€ PrÃ³ximos Passos na VM
 
-### Passo 1: Atualizar o Código
+### Passo 1: Atualizar o CÃ³digo
 ```bash
 cd /srv/magnus-pbx
 git pull origin main
 ```
 
-### Passo 2: Executar Script de Configuração
+### Passo 2: Executar Script de ConfiguraÃ§Ã£o
 ```bash
 chmod +x scripts/config-cdr-pgsql.sh
 ./scripts/config-cdr-pgsql.sh
 ```
 
 **O que o script faz:**
-1. ✅ Cria a tabela CDR no PostgreSQL
-2. ✅ Verifica se cdr_pgsql.conf existe
-3. ✅ Recarrega módulo cdr_pgsql.so no Asterisk
-4. ✅ Testa conexão com banco
-5. ✅ Mostra últimos 5 CDRs
+1. âœ… Cria a tabela CDR no PostgreSQL
+2. âœ… Verifica se cdr_pgsql.conf existe
+3. âœ… Recarrega mÃ³dulo cdr_pgsql.so no Asterisk
+4. âœ… Testa conexÃ£o com banco
+5. âœ… Mostra Ãºltimos 5 CDRs
 
-### Passo 3: Testar Gravação de CDR
+### Passo 3: Testar GravaÃ§Ã£o de CDR
 ```bash
 # 1. Ligue para *43 (echo test) de um softphone
 # 2. Verifique se apareceu no banco
@@ -68,14 +68,14 @@ docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "SELEC
 docker compose logs -f asterisk-magnus | grep -i cdr
 ```
 
-**Você deve ver:**
-- ✅ `cdr_pgsql.so` carregado
-- ✅ `Connected to postgres-magnus@magnus_pbx`
-- ✅ Sem erros de "No such file or directory"
+**VocÃª deve ver:**
+- âœ… `cdr_pgsql.so` carregado
+- âœ… `Connected to postgres-magnus@magnus_pbx`
+- âœ… Sem erros de "No such file or directory"
 
-## 📊 Consultando CDRs
+## ðŸ“Š Consultando CDRs
 
-### Ver Últimas 10 Chamadas
+### Ver Ãšltimas 10 Chamadas
 ```sql
 SELECT * FROM cdr_readable 
 ORDER BY calldate DESC 
@@ -104,74 +104,75 @@ FROM cdr
 WHERE calldate::date = CURRENT_DATE;
 ```
 
-**Mais consultas:** Veja [doc/CDR_QUERIES.md](./CDR_QUERIES.md)
+**Mais consultas:** Veja [docs/CDR_QUERIES.md](./CDR_QUERIES.md)
 
-## 🔍 Troubleshooting
+## ðŸ” Troubleshooting
 
 ### Erro: "module cdr_pgsql.so not found"
 ```bash
-# Verificar se módulo está disponível
+# Verificar se mÃ³dulo estÃ¡ disponÃ­vel
 docker compose exec asterisk-magnus ls -la /usr/lib/asterisk/modules/cdr_pgsql.so
 
-# Recarregar módulos
+# Recarregar mÃ³dulos
 docker compose exec asterisk-magnus asterisk -rx "module load cdr_pgsql.so"
 ```
 
 ### Erro: "could not connect to database"
 ```bash
-# Testar conexão com PostgreSQL
+# Testar conexÃ£o com PostgreSQL
 docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "SELECT version();"
 
-# Verificar configuração
+# Verificar configuraÃ§Ã£o
 cat asterisk_etc/cdr_pgsql.conf
 ```
 
-### Nenhum CDR está sendo gravado
+### Nenhum CDR estÃ¡ sendo gravado
 ```bash
-# Verificar se CDR está habilitado
+# Verificar se CDR estÃ¡ habilitado
 docker compose exec asterisk-magnus asterisk -rx "cdr status"
 
-# Verificar módulos CDR carregados
+# Verificar mÃ³dulos CDR carregados
 docker compose exec asterisk-magnus asterisk -rx "module show like cdr"
 
 # Verificar tabela CDR existe
 docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "\d cdr"
 ```
 
-### Chamadas não atendidas não aparecem
-- ✅ Verifique `cdr.conf`: `unanswered = yes`
-- ✅ Já está configurado no arquivo atual
+### Chamadas nÃ£o atendidas nÃ£o aparecem
+- âœ… Verifique `cdr.conf`: `unanswered = yes`
+- âœ… JÃ¡ estÃ¡ configurado no arquivo atual
 
-## 📋 Arquitetura CDR Dual
+## ðŸ“‹ Arquitetura CDR Dual
 
-O sistema está configurado para usar **dois backends simultaneamente**:
+O sistema estÃ¡ configurado para usar **dois backends simultaneamente**:
 
 ### 1. PostgreSQL (Principal)
-- ✅ Armazenamento em banco relacional
-- ✅ Consultas SQL avançadas
-- ✅ Integração com dashboards
-- ✅ Backup automático do banco
-- ✅ Relatórios e análises
+- âœ… Armazenamento em banco relacional
+- âœ… Consultas SQL avanÃ§adas
+- âœ… IntegraÃ§Ã£o com dashboards
+- âœ… Backup automÃ¡tico do banco
+- âœ… RelatÃ³rios e anÃ¡lises
 
 ### 2. CSV (Backup)
-- ✅ Arquivos em `/var/log/asterisk/cdr-csv/Master.csv`
-- ✅ Backup redundante
-- ✅ Exportação rápida
-- ✅ Compatibilidade legada
+- âœ… Arquivos em `/var/log/asterisk/cdr-csv/Master.csv`
+- âœ… Backup redundante
+- âœ… ExportaÃ§Ã£o rÃ¡pida
+- âœ… Compatibilidade legada
 
-## 🎯 Próximas Fases
+## ðŸŽ¯ PrÃ³ximas Fases
 
-Após CDR configurado, seguir [PROXIMOS_PASSOS.md](./PROXIMOS_PASSOS.md):
+ApÃ³s CDR configurado, seguir [PROXIMOS_PASSOS.md](./PROXIMOS_PASSOS.md):
 
-1. **Fase 1 - Validação**: Testar softphones e códigos de recurso
-2. **Fase 2 - Backend**: API .NET 10 para integração
-3. **Fase 3 - Frontend**: Dashboard Vue 3 com relatórios CDR
-4. **Fase 4 - Integração**: Conectar frontend ↔ backend ↔ Asterisk
-5. **Fase 5 - Recursos Avançados**: Gravação de chamadas, IVR, etc
+1. **Fase 1 - ValidaÃ§Ã£o**: Testar softphones e cÃ³digos de recurso
+2. **Fase 2 - Backend**: API .NET 10 para integraÃ§Ã£o
+3. **Fase 3 - Frontend**: Dashboard Vue 3 com relatÃ³rios CDR
+4. **Fase 4 - IntegraÃ§Ã£o**: Conectar frontend â†” backend â†” Asterisk
+5. **Fase 5 - Recursos AvanÃ§ados**: GravaÃ§Ã£o de chamadas, IVR, etc
 
-## 📝 Referências
+## ðŸ“ ReferÃªncias
 
 - [CDR_QUERIES.md](./CDR_QUERIES.md) - 50+ consultas SQL de exemplo
 - [PROXIMOS_PASSOS.md](./PROXIMOS_PASSOS.md) - Roadmap completo do projeto
-- [SETUP_VM.md](./SETUP_VM.md) - Configuração inicial da VM
-- [ESTRUTURA_MODULAR.md](./ESTRUTURA_MODULAR.md) - Documentação do dialplan modular
+- [SETUP_VM.md](./SETUP_VM.md) - ConfiguraÃ§Ã£o inicial da VM
+- [ESTRUTURA_MODULAR.md](./ESTRUTURA_MODULAR.md) - DocumentaÃ§Ã£o do dialplan modular
+

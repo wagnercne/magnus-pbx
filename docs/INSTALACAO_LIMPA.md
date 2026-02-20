@@ -1,20 +1,20 @@
-# 🧹 Guia de Instalação Limpa - Magnus PBX
+﻿# ðŸ§¹ Guia de InstalaÃ§Ã£o Limpa - Magnus PBX
 
-## 📋 Visão Geral
+## ðŸ“‹ VisÃ£o Geral
 
-Este guia orienta a **instalação limpa do zero** do Magnus PBX, removendo qualquer instalação anterior e garantindo que não haja resquícios de configurações antigas que possam causar problemas.
+Este guia orienta a **instalaÃ§Ã£o limpa do zero** do Magnus PBX, removendo qualquer instalaÃ§Ã£o anterior e garantindo que nÃ£o haja resquÃ­cios de configuraÃ§Ãµes antigas que possam causar problemas.
 
-### ✅ Por que fazer instalação limpa?
+### âœ… Por que fazer instalaÃ§Ã£o limpa?
 
-- 🧹 Remove configurações herdadas problemáticas
-- 🔒 Garante estrutura consistente com o GitHub
-- 📦 Banco de dados criado do zero (schema moderno)
-- 🎯 Apenas arquivos essenciais (sem "lixo")
-- 🚀 Setup reproduzível e documentado
+- ðŸ§¹ Remove configuraÃ§Ãµes herdadas problemÃ¡ticas
+- ðŸ”’ Garante estrutura consistente com o GitHub
+- ðŸ“¦ Banco de dados criado do zero (schema moderno)
+- ðŸŽ¯ Apenas arquivos essenciais (sem "lixo")
+- ðŸš€ Setup reproduzÃ­vel e documentado
 
 ---
 
-## 🎯 Pré-requisitos
+## ðŸŽ¯ PrÃ©-requisitos
 
 ### Na VM Linux
 
@@ -35,7 +35,7 @@ sudo netstat -tulpn | grep -E "5060|8088|8089|80|443|9443"
 
 ---
 
-## 🚀 Método 1: Script Automatizado (Recomendado)
+## ðŸš€ MÃ©todo 1: Script Automatizado (Recomendado)
 
 ### 1. Download do Script
 
@@ -45,47 +45,47 @@ wget https://raw.githubusercontent.com/wagnercne/magnus-pbx/main/scripts/instala
 chmod +x /tmp/instalacao-limpa.sh
 ```
 
-### 2. Executar Instalação Limpa
+### 2. Executar InstalaÃ§Ã£o Limpa
 
 ```bash
 /tmp/instalacao-limpa.sh
 ```
 
 **O script vai:**
-1. ✅ Fazer backup da instalação antiga
-2. ✅ Parar e remover containers
-3. ✅ Apagar `/srv/magnus-pbx`
-4. ✅ Clonar repositório do GitHub
-5. ✅ Compilar imagem Asterisk (~15 min)
-6. ✅ Criar banco de dados do zero
-7. ✅ Validar instalação
+1. âœ… Fazer backup da instalaÃ§Ã£o antiga
+2. âœ… Parar e remover containers
+3. âœ… Apagar `/srv/magnus-pbx`
+4. âœ… Clonar repositÃ³rio do GitHub
+5. âœ… Compilar imagem Asterisk (~15 min)
+6. âœ… Criar banco de dados do zero
+7. âœ… Validar instalaÃ§Ã£o
 
 ### 3. Aguardar
 
 ```
-⏳ Build da imagem: ~10-15 minutos (primeira vez)
-⏳ Inicialização: ~30 segundos
+â³ Build da imagem: ~10-15 minutos (primeira vez)
+â³ InicializaÃ§Ã£o: ~30 segundos
 ```
 
 ---
 
-## 🔧 Método 2: Manual (Passo a Passo)
+## ðŸ”§ MÃ©todo 2: Manual (Passo a Passo)
 
 ### Passo 1: Backup e Limpeza
 
 ```bash
-# 1.1 Fazer backup (segurança)
+# 1.1 Fazer backup (seguranÃ§a)
 sudo cp -r /srv/magnus-pbx /tmp/magnus-pbx-backup-$(date +%Y%m%d)
 
 # 1.2 Parar containers
 cd /srv/magnus-pbx
 docker compose down -v
 
-# 1.3 Remover instalação antiga
+# 1.3 Remover instalaÃ§Ã£o antiga
 sudo rm -rf /srv/magnus-pbx
 ```
 
-### Passo 2: Clonar Repositório
+### Passo 2: Clonar RepositÃ³rio
 
 ```bash
 # 2.1 Clonar do GitHub
@@ -108,11 +108,11 @@ mkdir -p portainer_data
 mkdir -p redis_data
 mkdir -p custom_sounds
 
-# 3.2 Garantir que pastas de log estão vazias
+# 3.2 Garantir que pastas de log estÃ£o vazias
 rm -f asterisk_logs/*.log 2>/dev/null || true
 
-# NOTA: Sons PT-BR já vêm embutidos no container (/var/lib/asterisk/sounds/pt_BR)
-# Pasta custom_sounds/ é para sons customizados opcionais (voz masculina, outros idiomas, etc)
+# NOTA: Sons PT-BR jÃ¡ vÃªm embutidos no container (/var/lib/asterisk/sounds/pt_BR)
+# Pasta custom_sounds/ Ã© para sons customizados opcionais (voz masculina, outros idiomas, etc)
 
 # 3.3 Verificar estrutura
 ls -la
@@ -120,30 +120,30 @@ ls -la
 
 **Deve ver:**
 ```
-asterisk_etc/          ← Configurações (versionado)
-asterisk_logs/         ← Logs (vazio, não versionado)
-asterisk_recordings/   ← Gravações (vazio)
-custom_sounds/         ← Sons customizados opcionais (criado agora)
-backend/               ← API .NET (futuro)
-doc/                   ← Documentação
-frontend/              ← Vue 3 (futuro)
-postgres_data/         ← Dados PostgreSQL (criado agora)
-portainer_data/        ← Dados Portainer (criado agora)
-redis_data/            ← Dados Redis (criado agora)
-sql/                   ← Scripts SQL iniciais
-scripts/               ← Scripts de automação
-docker-compose.yml     ← Orquestração
-Dockerfile             ← Imagem Asterisk
+asterisk_etc/          â† ConfiguraÃ§Ãµes (versionado)
+asterisk_logs/         â† Logs (vazio, nÃ£o versionado)
+asterisk_recordings/   â† GravaÃ§Ãµes (vazio)
+custom_sounds/         â† Sons customizados opcionais (criado agora)
+backend/               â† API .NET (futuro)
+docs/                   â† DocumentaÃ§Ã£o
+frontend/              â† Vue 3 (futuro)
+postgres_data/         â† Dados PostgreSQL (criado agora)
+portainer_data/        â† Dados Portainer (criado agora)
+redis_data/            â† Dados Redis (criado agora)
+sql/                   â† Scripts SQL iniciais
+scripts/               â† Scripts de automaÃ§Ã£o
+docker-compose.yml     â† OrquestraÃ§Ã£o
+Dockerfile             â† Imagem Asterisk
 README.md
 .gitignore
 ```
 
 **Nota sobre sons:**
-- 📁 `custom_sounds/` é para customizações opcionais (voz masculina, outros idiomas, sonsda empresa)
-- 📖 Veja [custom_sounds/README.md](../custom_sounds/README.md) para detalhes
-- ✅ Sons PT-BR já incluídos no container (`/var/lib/asterisk/sounds/pt_BR`)
-- ✅ Instalados automaticamente durante build do Dockerfile
-- ⏭️ `asterisk_sounds/` seria apenas para sons customizados extras (opcional)
+- ðŸ“ `custom_sounds/` Ã© para customizaÃ§Ãµes opcionais (voz masculina, outros idiomas, sonsda empresa)
+- ðŸ“– Veja [custom_sounds/README.md](../custom_sounds/README.md) para detalhes
+- âœ… Sons PT-BR jÃ¡ incluÃ­dos no container (`/var/lib/asterisk/sounds/pt_BR`)
+- âœ… Instalados automaticamente durante build do Dockerfile
+- â­ï¸ `asterisk_sounds/` seria apenas para sons customizados extras (opcional)
 
 ### Passo 4: Build da Imagem Asterisk
 
@@ -155,7 +155,7 @@ docker compose build asterisk-magnus
 docker images | grep asterisk-magnus
 ```
 
-### Passo 5: Iniciar Serviços
+### Passo 5: Iniciar ServiÃ§os
 
 ```bash
 # 5.1 Subir tudo
@@ -167,28 +167,28 @@ docker compose ps
 # 5.3 Deve mostrar todos 'healthy' ou 'running'
 ```
 
-### Passo 6: Aguardar Inicialização
+### Passo 6: Aguardar InicializaÃ§Ã£o
 
 ```bash
 # 6.1 Aguardar PostgreSQL
-echo "⏳ Aguardando PostgreSQL..."
+echo "â³ Aguardando PostgreSQL..."
 for i in {1..30}; do
     if docker compose exec -T postgres-magnus pg_isready -U admin_magnus &>/dev/null; then
-        echo "✅ PostgreSQL pronto!"
+        echo "âœ… PostgreSQL pronto!"
         break
     fi
     sleep 2
 done
 
 # 6.2 Aguardar Asterisk
-echo "⏳ Aguardando Asterisk..."
+echo "â³ Aguardando Asterisk..."
 sleep 15
 
 # 6.3 Verificar Asterisk
 docker compose exec asterisk-magnus asterisk -rx "core show version"
 ```
 
-### Passo 7: Validação
+### Passo 7: ValidaÃ§Ã£o
 
 ```bash
 # 7.1 Ver banco de dados criado
@@ -209,7 +209,7 @@ docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "
 # 2001@acme        | ctx-acme      | ulaw,alaw
 # 3001@techno      | ctx-techno    | opus,vp8
 
-# 7.3 Ver módulos Asterisk carregados
+# 7.3 Ver mÃ³dulos Asterisk carregados
 docker compose exec asterisk-magnus asterisk -rx "module show like pgsql"
 docker compose exec asterisk-magnus asterisk -rx "module show like cdr"
 
@@ -220,7 +220,7 @@ docker compose logs -f asterisk-magnus
 
 ---
 
-## ✅ Validação da Instalação
+## âœ… ValidaÃ§Ã£o da InstalaÃ§Ã£o
 
 ### 1. Containers Rodando
 
@@ -259,11 +259,11 @@ docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "
 ### 3. Asterisk
 
 ```bash
-# Ver versão
+# Ver versÃ£o
 docker compose exec asterisk-magnus asterisk -rx "core show version"
 # Asterisk 22.1.0
 
-# Ver módulos críticos
+# Ver mÃ³dulos crÃ­ticos
 docker compose exec asterisk-magnus asterisk -rx "module show like res_config_pgsql"
 # res_config_pgsql.so        Running (Realtime Configuration Driver for PostgreSQL)
 
@@ -271,7 +271,7 @@ docker compose exec asterisk-magnus asterisk -rx "module show like cdr_pgsql"
 # cdr_pgsql.so              Running (PostgreSQL CDR Backend)
 ```
 
-### 4. Conectividade Banco ↔ Asterisk
+### 4. Conectividade Banco â†” Asterisk
 
 ```bash
 docker compose exec asterisk-magnus asterisk -rx "realtime load ps_endpoints 1001@belavista"
@@ -296,7 +296,7 @@ tcp   0.0.0.0:9443    LISTEN    docker-proxy
 
 ---
 
-## 🧪 Teste Funcional
+## ðŸ§ª Teste Funcional
 
 ### 1. Configurar Softphone
 
@@ -304,9 +304,9 @@ tcp   0.0.0.0:9443    LISTEN    docker-proxy
 
 ```
 Servidor:    <IP_DA_VM>:5060
-Usuário:     1001
+UsuÃ¡rio:     1001
 Senha:       magnus123
-Domínio:     belavista
+DomÃ­nio:     belavista
 Transporte:  UDP
 ```
 
@@ -319,12 +319,12 @@ Transporte:  UDP
 docker compose exec asterisk-magnus asterisk -rx "pjsip show endpoints"
 ```
 
-Deve mostrar `1001@belavista` como **Avail** (disponível)
+Deve mostrar `1001@belavista` como **Avail** (disponÃ­vel)
 
 ### 3. Discar *43 (Echo Test)
 
 - Discar: `*43`
-- Deve tocar e você ouve sua própria voz com delay
+- Deve tocar e vocÃª ouve sua prÃ³pria voz com delay
 - Desligar
 
 ### 4. Verificar CDR
@@ -335,7 +335,7 @@ docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "
         \"Data/Hora\",
         \"Origem\",
         \"Destino\",
-        \"Duração Total (s)\",
+        \"DuraÃ§Ã£o Total (s)\",
         \"Status\"
     FROM cdr_readable 
     ORDER BY \"Data/Hora\" DESC 
@@ -347,13 +347,13 @@ docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "
 
 ---
 
-## 📊 Acessar Interfaces Web
+## ðŸ“Š Acessar Interfaces Web
 
 ### Portainer (Gerenciamento Docker)
 
 ```
 URL: https://<IP_DA_VM>:9443
-Primeira vez: Criar usuário admin
+Primeira vez: Criar usuÃ¡rio admin
 ```
 
 ### Traefik Dashboard
@@ -365,38 +365,38 @@ Mostra roteamento e backends
 
 ---
 
-## 🔍 Troubleshooting
+## ðŸ” Troubleshooting
 
-### Asterisk não inicia
+### Asterisk nÃ£o inicia
 
 ```bash
 # Ver logs
 docker compose logs asterisk-magnus
 
-# Verificar configurações
+# Verificar configuraÃ§Ãµes
 docker compose exec asterisk-magnus asterisk -rx "core show settings"
 
 # Entrar no container
 docker compose exec -it asterisk-magnus bash
 ```
 
-### PostgreSQL não aceita conexões
+### PostgreSQL nÃ£o aceita conexÃµes
 
 ```bash
 # Ver logs
 docker compose logs postgres-magnus
 
-# Testar conexão manual
+# Testar conexÃ£o manual
 docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "SELECT version();"
 ```
 
 ### Porta 5060 em uso
 
 ```bash
-# Ver o que está usando
+# Ver o que estÃ¡ usando
 sudo lsof -i :5060
 
-# Parar serviço conflitante (exemplo: Asterisk local)
+# Parar serviÃ§o conflitante (exemplo: Asterisk local)
 sudo systemctl stop asterisk
 sudo systemctl disable asterisk
 ```
@@ -413,73 +413,74 @@ docker compose build --no-cache --progress=plain asterisk-magnus
 
 ---
 
-## 📁 Estrutura de Arquivos
+## ðŸ“ Estrutura de Arquivos
 
-### ✅ Versionados no Git (mantém)
+### âœ… Versionados no Git (mantÃ©m)
 
 ```
-asterisk_etc/          ← Configurações Asterisk
-backend/               ← API .NET (futuro)
-doc/                   ← Documentação Markdown
-frontend/              ← Vue 3 (futuro)
-scripts/               ← Scripts Bash/PowerShell
-sql/                   ← Scripts SQL
-docker-compose.yml     ← Orquestração Docker
-Dockerfile             ← Imagem Asterisk
+asterisk_etc/          â† ConfiguraÃ§Ãµes Asterisk
+backend/               â† API .NET (futuro)
+docs/                   â† DocumentaÃ§Ã£o Markdown
+frontend/              â† Vue 3 (futuro)
+scripts/               â† Scripts Bash/PowerShell
+sql/                   â† Scripts SQL
+docker-compose.yml     â† OrquestraÃ§Ã£o Docker
+Dockerfile             â† Imagem Asterisk
 README.md
 .gitignore
 ```
 
-### ❌ NÃO versionados (gerados em runtime)
+### âŒ NÃƒO versionados (gerados em runtime)
 
 ```
-postgres_data/         ← Dados PostgreSQL
-portainer_data/        ← Dados Portainer
-redis_data/            ← Dados Redis
-asterisk_logs/*.log    ← Logs Asterisk
-asterisk_recordings/*  ← Gravações
+postgres_data/         â† Dados PostgreSQL
+portainer_data/        â† Dados Portainer
+redis_data/            â† Dados Redis
+asterisk_logs/*.log    â† Logs Asterisk
+asterisk_recordings/*  â† GravaÃ§Ãµes
 ```
 
 ---
 
-## 🎯 Próximos Passos
+## ðŸŽ¯ PrÃ³ximos Passos
 
-Após instalação limpa e testes:
+ApÃ³s instalaÃ§Ã£o limpa e testes:
 
-1. ✅ **Configurar 2 softphones** (1001 e 1002)
-2. ✅ **Testar chamadas internas** (1001 → 1002)
-3. ✅ **Testar códigos de recursos** (*43, *97)
-4. ✅ **Verificar CDRs no banco**
-5. ⏭️ **Desenvolver backend** .NET 10 API
-6. ⏭️ **Desenvolver frontend** Vue 3
-7. ⏭️ **Integrar** frontend ↔ backend ↔ Asterisk
+1. âœ… **Configurar 2 softphones** (1001 e 1002)
+2. âœ… **Testar chamadas internas** (1001 â†’ 1002)
+3. âœ… **Testar cÃ³digos de recursos** (*43, *97)
+4. âœ… **Verificar CDRs no banco**
+5. â­ï¸ **Desenvolver backend** .NET 10 API
+6. â­ï¸ **Desenvolver frontend** Vue 3
+7. â­ï¸ **Integrar** frontend â†” backend â†” Asterisk
 
 ---
 
-## 📚 Documentação Relacionada
+## ðŸ“š DocumentaÃ§Ã£o Relacionada
 
 - [DATABASE_RESET.md](./DATABASE_RESET.md) - Detalhes do schema do banco
-- [CDR_DEPLOY.md](./CDR_DEPLOY.md) - Configuração CDR PostgreSQL
-- [CDR_QUERIES.md](./CDR_QUERIES.md) - 50+ consultas SQL úteis
-- [ASTERISK_CONFIG_INVENTORY.md](./ASTERISK_CONFIG_INVENTORY.md) - Inventário de arquivos de config
+- [CDR_DEPLOY.md](./CDR_DEPLOY.md) - ConfiguraÃ§Ã£o CDR PostgreSQL
+- [CDR_QUERIES.md](./CDR_QUERIES.md) - 50+ consultas SQL Ãºteis
+- [ASTERISK_CONFIG_INVENTORY.md](./ASTERISK_CONFIG_INVENTORY.md) - InventÃ¡rio de arquivos de config
 - [PROXIMOS_PASSOS.md](./PROXIMOS_PASSOS.md) - Roadmap completo
 - [SETUP_VM.md](./SETUP_VM.md) - Setup inicial da VM
 
 ---
 
-## ✅ Checklist Final
+## âœ… Checklist Final
 
-- [ ] Backup da instalação anterior feito
-- [ ] Repositório clonado do GitHub
+- [ ] Backup da instalaÃ§Ã£o anterior feito
+- [ ] RepositÃ³rio clonado do GitHub
 - [ ] Imagem Asterisk compilada
 - [ ] 5 containers rodando (asterisk, postgres, redis, traefik, portainer)
 - [ ] Banco com 3 tenants, 5 ramais, 5 CDRs de exemplo
-- [ ] Módulos `res_config_pgsql` e `cdr_pgsql` carregados
+- [ ] MÃ³dulos `res_config_pgsql` e `cdr_pgsql` carregados
 - [ ] Softphone registrado com sucesso
 - [ ] *43 funciona e grava CDR
-- [ ] Portainer acessível em 9443
-- [ ] Logs sem erros críticos
+- [ ] Portainer acessÃ­vel em 9443
+- [ ] Logs sem erros crÃ­ticos
 
 ---
 
-**✨ Instalação limpa concluída! Agora você tem um ambiente consistente, reproduzível e pronto para desenvolvimento.**
+**âœ¨ InstalaÃ§Ã£o limpa concluÃ­da! Agora vocÃª tem um ambiente consistente, reproduzÃ­vel e pronto para desenvolvimento.**
+

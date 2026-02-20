@@ -1,125 +1,125 @@
-# ✅ Resumo: Preparação para Instalação Limpa
+﻿# âœ… Resumo: PreparaÃ§Ã£o para InstalaÃ§Ã£o Limpa
 
-## 🎯 O Que Foi Feito
+## ðŸŽ¯ O Que Foi Feito
 
-Revisão completa do projeto para instalação limpa do zero, eliminando herança de configurações antigas.
+RevisÃ£o completa do projeto para instalaÃ§Ã£o limpa do zero, eliminando heranÃ§a de configuraÃ§Ãµes antigas.
 
 ---
 
-## 📊 Análise Realizada
+## ðŸ“Š AnÃ¡lise Realizada
 
 ### 1. **Estrutura de Pastas**
 ```
 magnus-pbx/
-├── asterisk_etc/        ✅ 114 arquivos (70 podem ser removidos)
-├── asterisk_logs/       ✅ Limpo (.gitkeep criado)
-├── asterisk_recordings/ ✅ Limpo (.gitkeep criado)
-├── asterisk_sounds/     ✅ Limpo (.gitkeep criado)
-├── backend/             ⏭️ Futuro (.NET 10 API)
-├── docker-compose.yml   ✅ Revisado
-├── Dockerfile           ✅ Revisado
-├── frontend/            ⏭️ Futuro (Vue 3)
-├── scripts/             ✅ 11 scripts (1 novo: instalacao-limpa.sh)
-├── sql/                 ✅ 3 arquivos (01, 02, 03)
-└── doc/                 ✅ 10 documentos
+â”œâ”€â”€ asterisk_etc/        âœ… 114 arquivos (70 podem ser removidos)
+â”œâ”€â”€ asterisk_logs/       âœ… Limpo (.gitkeep criado)
+â”œâ”€â”€ asterisk_recordings/ âœ… Limpo (.gitkeep criado)
+â”œâ”€â”€ asterisk_sounds/     âœ… Limpo (.gitkeep criado)
+â”œâ”€â”€ backend/             â­ï¸ Futuro (.NET 10 API)
+â”œâ”€â”€ docker-compose.yml   âœ… Revisado
+â”œâ”€â”€ Dockerfile           âœ… Revisado
+â”œâ”€â”€ frontend/            â­ï¸ Futuro (Vue 3)
+â”œâ”€â”€ scripts/             âœ… 11 scripts (1 novo: instalacao-limpa.sh)
+â”œâ”€â”€ sql/                 âœ… 3 arquivos (01, 02, 03)
+â””â”€â”€ docs/                 âœ… 10 documentos
 ```
 
 ### 2. **Dockerfile**
-- ✅ **Original**: Funcional, single-stage, ~1.2GB
-- ✨ **Otimizado**: Multi-stage, 800MB, non-root user, healthcheck
+- âœ… **Original**: Funcional, single-stage, ~1.2GB
+- âœ¨ **Otimizado**: Multi-stage, 800MB, non-root user, healthcheck
 
 ### 3. **docker-compose.yml**
-- ✅ **Original**: Bind mounts, sem healthchecks
-- ✨ **Otimizado**: Named volumes, IPs fixos, resource limits, logs com rotação
+- âœ… **Original**: Bind mounts, sem healthchecks
+- âœ¨ **Otimizado**: Named volumes, IPs fixos, resource limits, logs com rotaÃ§Ã£o
 
-### 4. **Configurações Asterisk (asterisk_etc/)**
+### 4. **ConfiguraÃ§Ãµes Asterisk (asterisk_etc/)**
 
 | Categoria | Quantidade | Status |
 |-----------|------------|--------|
-| **Essenciais** | ~30 arquivos | ✅ Manter |
-| **Opcionais** | ~14 arquivos | 🟡 Decidir depois |
-| **Desnecessários** | ~70 arquivos | ❌ Podem ser removidos |
+| **Essenciais** | ~30 arquivos | âœ… Manter |
+| **Opcionais** | ~14 arquivos | ðŸŸ¡ Decidir depois |
+| **DesnecessÃ¡rios** | ~70 arquivos | âŒ Podem ser removidos |
 
-**Exemplos de desnecessários:**
+**Exemplos de desnecessÃ¡rios:**
 - Protocolos obsoletos: `iax.conf`, `ooh323.conf`, `mgcp.conf`
 - Hardware local: `chan_dahdi.conf`, `alsa.conf`, `console.conf`
-- CDR não PostgreSQL: `cdr_odbc.conf`, `cdr_mysql.conf`, `cdr_sqlite3.conf`
-- Conferências antigas: `meetme.conf`, `minivm.conf`
+- CDR nÃ£o PostgreSQL: `cdr_odbc.conf`, `cdr_mysql.conf`, `cdr_sqlite3.conf`
+- ConferÃªncias antigas: `meetme.conf`, `minivm.conf`
 
 ---
 
-## 📝 Arquivos Criados
+## ðŸ“ Arquivos Criados
 
 ### 1. **scripts/instalacao-limpa.sh** (170 linhas)
 Script automatizado que:
-1. ✅ Faz backup da instalação antiga
-2. ✅ Para containers
-3. ✅ Remove `/srv/magnus-pbx`
-4. ✅ Clona repositório do GitHub
-5. ✅ Compila imagem Asterisk
-6. ✅ Cria banco de dados
-7. ✅ Valida instalação
+1. âœ… Faz backup da instalaÃ§Ã£o antiga
+2. âœ… Para containers
+3. âœ… Remove `/srv/magnus-pbx`
+4. âœ… Clona repositÃ³rio do GitHub
+5. âœ… Compila imagem Asterisk
+6. âœ… Cria banco de dados
+7. âœ… Valida instalaÃ§Ã£o
 
-### 2. **doc/INSTALACAO_LIMPA.md** (450 linhas)
+### 2. **docs/INSTALACAO_LIMPA.md** (450 linhas)
 Guia completo com:
-- ✅ Pré-requisitos
-- ✅ Método automatizado (script)
-- ✅ Método manual (passo a passo)
-- ✅ Validação da instalação
-- ✅ Teste funcional (*43)
-- ✅ Troubleshooting
-- ✅ Checklist final
+- âœ… PrÃ©-requisitos
+- âœ… MÃ©todo automatizado (script)
+- âœ… MÃ©todo manual (passo a passo)
+- âœ… ValidaÃ§Ã£o da instalaÃ§Ã£o
+- âœ… Teste funcional (*43)
+- âœ… Troubleshooting
+- âœ… Checklist final
 
-### 3. **doc/ASTERISK_CONFIG_INVENTORY.md** (350 linhas)
-Análise detalhada dos 114 arquivos:
-- ✅ Classificação: Essenciais (30) / Opcionais (14) / Desnecessários (70)
-- ✅ Descrição de cada categoria
-- ✅ Comandos para limpeza
-- ✅ Como verificar se um arquivo é usado
+### 3. **docs/ASTERISK_CONFIG_INVENTORY.md** (350 linhas)
+AnÃ¡lise detalhada dos 114 arquivos:
+- âœ… ClassificaÃ§Ã£o: Essenciais (30) / Opcionais (14) / DesnecessÃ¡rios (70)
+- âœ… DescriÃ§Ã£o de cada categoria
+- âœ… Comandos para limpeza
+- âœ… Como verificar se um arquivo Ã© usado
 
 ### 4. **Dockerfile.optimized** (120 linhas)
-Versão otimizada com:
-- ✅ Multi-stage build (builder + runtime)
-- ✅ Imagem 30% menor (800MB vs 1.2GB)
-- ✅ Usuário `asterisk` (não-root)
-- ✅ Healthcheck nativo
-- ✅ Versão específica do Asterisk (22.1.0)
-- ✅ Melhor cache de layers
+VersÃ£o otimizada com:
+- âœ… Multi-stage build (builder + runtime)
+- âœ… Imagem 30% menor (800MB vs 1.2GB)
+- âœ… UsuÃ¡rio `asterisk` (nÃ£o-root)
+- âœ… Healthcheck nativo
+- âœ… VersÃ£o especÃ­fica do Asterisk (22.1.0)
+- âœ… Melhor cache de layers
 
 ### 5. **docker-compose.optimized.yml** (200 linhas)
-Versão otimizada com:
-- ✅ Named volumes (`postgres_data`, `portainer_data`)
-- ✅ IPs fixos (172.20.0.x)
-- ✅ Healthchecks para todos os serviços
-- ✅ Resource limits (CPU, memória)
-- ✅ Logging com rotação automática
-- ✅ Dependency conditions (`service_healthy`)
-- ✅ Restart policy: `unless-stopped`
+VersÃ£o otimizada com:
+- âœ… Named volumes (`postgres_data`, `portainer_data`)
+- âœ… IPs fixos (172.20.0.x)
+- âœ… Healthchecks para todos os serviÃ§os
+- âœ… Resource limits (CPU, memÃ³ria)
+- âœ… Logging com rotaÃ§Ã£o automÃ¡tica
+- âœ… Dependency conditions (`service_healthy`)
+- âœ… Restart policy: `unless-stopped`
 
-### 6. **doc/DOCKER_COMPARISON.md** (280 linhas)
-Comparação detalhada:
-- ✅ Tabela comparativa Original vs Otimizado
-- ✅ Vantagens de cada abordagem
-- ✅ Guia de migração gradual
-- ✅ Checklist de decisão
-- ✅ Customizações comuns
+### 6. **docs/DOCKER_COMPARISON.md** (280 linhas)
+ComparaÃ§Ã£o detalhada:
+- âœ… Tabela comparativa Original vs Otimizado
+- âœ… Vantagens de cada abordagem
+- âœ… Guia de migraÃ§Ã£o gradual
+- âœ… Checklist de decisÃ£o
+- âœ… CustomizaÃ§Ãµes comuns
 
 ### 7. **.gitignore atualizado**
-- ✅ Ignorar `asterisk_logs/*.log`
-- ✅ Ignorar `asterisk_recordings/*.wav`
-- ✅ Ignorar `asterisk_sounds/*.mp3`
-- ✅ Ignorar `postgres_data/`
+- âœ… Ignorar `asterisk_logs/*.log`
+- âœ… Ignorar `asterisk_recordings/*.wav`
+- âœ… Ignorar `asterisk_sounds/*.mp3`
+- âœ… Ignorar `postgres_data/`
 
 ### 8. **.gitkeep criados**
-- ✅ `asterisk_logs/.gitkeep` - Pasta existe mas vazia
-- ✅ `asterisk_recordings/.gitkeep` - Pasta existe mas vazia
-- ✅ `asterisk_sounds/.gitkeep` - Pasta existe mas vazia
+- âœ… `asterisk_logs/.gitkeep` - Pasta existe mas vazia
+- âœ… `asterisk_recordings/.gitkeep` - Pasta existe mas vazia
+- âœ… `asterisk_sounds/.gitkeep` - Pasta existe mas vazia
 
 ---
 
-## 🚀 Como Executar na VM
+## ðŸš€ Como Executar na VM
 
-### Opção 1: Script Automatizado (Recomendado)
+### OpÃ§Ã£o 1: Script Automatizado (Recomendado)
 
 ```bash
 # 1. Download direto do GitHub
@@ -130,14 +130,14 @@ chmod +x /tmp/instalacao-limpa.sh
 /tmp/instalacao-limpa.sh
 
 # 3. Confirmar digitando: LIMPAR
-# Aguardar ~15-20 minutos (build + inicialização)
+# Aguardar ~15-20 minutos (build + inicializaÃ§Ã£o)
 
 # 4. Validar
 docker compose ps
 docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "SELECT COUNT(*) FROM ps_endpoints;"
 ```
 
-### Opção 2: Manual (Controle Total)
+### OpÃ§Ã£o 2: Manual (Controle Total)
 
 ```bash
 # 1. Backup e limpeza
@@ -152,9 +152,9 @@ cd /srv/magnus-pbx
 # 3. Build
 docker compose build asterisk-magnus
 
-# Ou, para usar versão otimizada:
+# Ou, para usar versÃ£o otimizada:
 # docker compose -f docker-compose.optimized.yml build asterisk-magnus
-# Ver doc/COMO_USAR_DOCKER_OPTIMIZED.md para detalhes
+# Ver docs/COMO_USAR_DOCKER_OPTIMIZED.md para detalhes
 
 # 4. Deploy
 docker compose up -d
@@ -169,9 +169,9 @@ docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "\dt"
 
 ---
 
-## 🎁 Ramais Pré-Configurados
+## ðŸŽ Ramais PrÃ©-Configurados
 
-Após instalação limpa, **5 ramais** estarão prontos para uso:
+ApÃ³s instalaÃ§Ã£o limpa, **5 ramais** estarÃ£o prontos para uso:
 
 | Ramal | Tenant | Senha | Tipo | Contexto |
 |-------|--------|-------|------|----------|
@@ -180,12 +180,12 @@ Após instalação limpa, **5 ramais** estarão prontos para uso:
 | 2001 | acme | acme2001 | SIP | ctx-acme |
 | 3001 | techno | techno3001 | WebRTC | ctx-techno |
 
-### Teste Rápido
+### Teste RÃ¡pido
 
 ```bash
 # 1. Configurar softphone:
 #    Servidor: <IP_VM>:5060
-#    Usuário: 1001
+#    UsuÃ¡rio: 1001
 #    Senha: magnus123
 
 # 2. Discar *43 (echo test)
@@ -201,85 +201,85 @@ docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "
 
 ---
 
-## 📚 Documentação Atualizada
+## ðŸ“š DocumentaÃ§Ã£o Atualizada
 
 ### Principal
-1. [doc/INSTALACAO_LIMPA.md](./doc/INSTALACAO_LIMPA.md) ⭐ **COMECE AQUI**
-2. [doc/DATABASE_RESET.md](./doc/DATABASE_RESET.md) - Schema do banco
-3. [doc/PROXIMOS_PASSOS_RESET.md](./doc/PROXIMOS_PASSOS_RESET.md) - Pós-reset
+1. [docs/INSTALACAO_LIMPA.md](./INSTALACAO_LIMPA.md) â­ **COMECE AQUI**
+2. [docs/DATABASE_RESET.md](./DATABASE_RESET.md) - Schema do banco
+3. [docs/PROXIMOS_PASSOS_RESET.md](./PROXIMOS_PASSOS_RESET.md) - PÃ³s-reset
 
-### Configuração
-4. [doc/ASTERISK_CONFIG_INVENTORY.md](./doc/ASTERISK_CONFIG_INVENTORY.md) - 114 arquivos analisados
-5. [doc/DOCKER_COMPARISON.md](./doc/DOCKER_COMPARISON.md) - Original vs Otimizado
-6. [doc/CDR_DEPLOY.md](./doc/CDR_DEPLOY.md) - CDR PostgreSQL
-7. [doc/CDR_QUERIES.md](./doc/CDR_QUERIES.md) - 50+ consultas SQL
+### ConfiguraÃ§Ã£o
+4. [docs/ASTERISK_CONFIG_INVENTORY.md](./ASTERISK_CONFIG_INVENTORY.md) - 114 arquivos analisados
+5. [docs/DOCKER_COMPARISON.md](./DOCKER_COMPARISON.md) - Original vs Otimizado
+6. [docs/CDR_DEPLOY.md](./CDR_DEPLOY.md) - CDR PostgreSQL
+7. [docs/CDR_QUERIES.md](./CDR_QUERIES.md) - 50+ consultas SQL
 
 ### Desenvolvimento
-8. [doc/PROXIMOS_PASSOS.md](./doc/PROXIMOS_PASSOS.md) - Roadmap 5 fases
-9. [doc/SETUP_VM.md](./doc/SETUP_VM.md) - Setup VM inicial
-10. [doc/ESTRUTURA_MODULAR.md](./doc/ESTRUTURA_MODULAR.md) - Dialplan modular
+8. [docs/PROXIMOS_PASSOS.md](./PROXIMOS_PASSOS.md) - Roadmap 5 fases
+9. [docs/SETUP_VM.md](./SETUP_VM.md) - Setup VM inicial
+10. [docs/ESTRUTURA_MODULAR.md](./ESTRUTURA_MODULAR.md) - Dialplan modular
 
 ---
 
-## ✅ Benefícios da Instalação Limpa
+## âœ… BenefÃ­cios da InstalaÃ§Ã£o Limpa
 
 | Antes (Herdado) | Depois (Limpo) |
 |-----------------|----------------|
-| ❌ Configs antigas misturadas | ✅ Apenas configs essenciais versionadas |
-| ❌ CDR com schema conflitante | ✅ CDR moderno (Asterisk 22) |
-| ❌ 114 arquivos sem classificação | ✅ 30 essenciais + 70 identificados para remoção |
-| ❌ Logs versionados | ✅ Logs ignorados (.gitkeep apenas) |
-| ❌ Instalação manual | ✅ Script automatizado (1 comando) |
-| ❌ Sem healthchecks | ✅ Healthchecks em todos os containers |
-| ❌ Sem resource limits | ✅ Limites de CPU/memória configurados |
-| ❌ Root user no container | ✅ User `asterisk` (seguro) |
-| ❌ Bind mounts | ✅ Named volumes (Docker native) |
+| âŒ Configs antigas misturadas | âœ… Apenas configs essenciais versionadas |
+| âŒ CDR com schema conflitante | âœ… CDR moderno (Asterisk 22) |
+| âŒ 114 arquivos sem classificaÃ§Ã£o | âœ… 30 essenciais + 70 identificados para remoÃ§Ã£o |
+| âŒ Logs versionados | âœ… Logs ignorados (.gitkeep apenas) |
+| âŒ InstalaÃ§Ã£o manual | âœ… Script automatizado (1 comando) |
+| âŒ Sem healthchecks | âœ… Healthchecks em todos os containers |
+| âŒ Sem resource limits | âœ… Limites de CPU/memÃ³ria configurados |
+| âŒ Root user no container | âœ… User `asterisk` (seguro) |
+| âŒ Bind mounts | âœ… Named volumes (Docker native) |
 
 ---
 
-## 🎯 Próximos Passos
+## ðŸŽ¯ PrÃ³ximos Passos
 
-1. ✅ **Executar instalação limpa** (`instalacao-limpa.sh`)
-2. ✅ **Validar funcionamento** (containers, banco, módulos)
-3. ✅ **Testar *43** (softphone registrado)
-4. ✅ **Verificar CDRs** (gravação no PostgreSQL)
-5. ⏭️ **Limpar asterisk_etc/** (mover 70 arquivos desnecessários para `_unused/`)
-6. ⏭️ **Migrar para Docker otimizado** (se desejar)
-7. ⏭️ **Configurar backend** .NET 10 API
-8. ⏭️ **Configurar frontend** Vue 3
+1. âœ… **Executar instalaÃ§Ã£o limpa** (`instalacao-limpa.sh`)
+2. âœ… **Validar funcionamento** (containers, banco, mÃ³dulos)
+3. âœ… **Testar *43** (softphone registrado)
+4. âœ… **Verificar CDRs** (gravaÃ§Ã£o no PostgreSQL)
+5. â­ï¸ **Limpar asterisk_etc/** (mover 70 arquivos desnecessÃ¡rios para `_unused/`)
+6. â­ï¸ **Migrar para Docker otimizado** (se desejar)
+7. â­ï¸ **Configurar backend** .NET 10 API
+8. â­ï¸ **Configurar frontend** Vue 3
 
 ---
 
-## 🔍 Comparação de Tamanhos
+## ðŸ” ComparaÃ§Ã£o de Tamanhos
 
 ### Antes
 ```
 magnus-pbx/
-├── asterisk_etc/        114 arquivos (muitos desnecessários)
-├── asterisk_logs/       2 logs versionados ❌
-├── postgres_data/       Misturado com configs antigas
-└── ...
+â”œâ”€â”€ asterisk_etc/        114 arquivos (muitos desnecessÃ¡rios)
+â”œâ”€â”€ asterisk_logs/       2 logs versionados âŒ
+â”œâ”€â”€ postgres_data/       Misturado com configs antigas
+â””â”€â”€ ...
 ```
 
 ### Depois
 ```
 magnus-pbx/
-├── asterisk_etc/        114 arquivos (guia para limpar 70)
-├── asterisk_logs/       .gitkeep apenas ✅
-├── asterisk_recordings/ .gitkeep apenas ✅
-├── asterisk_sounds/     .gitkeep apenas ✅
-├── sql/                 3 arquivos ordenados (01, 02, 03)
-├── Dockerfile           Original (funcional)
-├── Dockerfile.optimized Otimizado (-30% tamanho)
-├── docker-compose.yml   Original (funcional)
-└── docker-compose.optimized.yml   Otimizado (produção)
+â”œâ”€â”€ asterisk_etc/        114 arquivos (guia para limpar 70)
+â”œâ”€â”€ asterisk_logs/       .gitkeep apenas âœ…
+â”œâ”€â”€ asterisk_recordings/ .gitkeep apenas âœ…
+â”œâ”€â”€ asterisk_sounds/     .gitkeep apenas âœ…
+â”œâ”€â”€ sql/                 3 arquivos ordenados (01, 02, 03)
+â”œâ”€â”€ Dockerfile           Original (funcional)
+â”œâ”€â”€ Dockerfile.optimized Otimizado (-30% tamanho)
+â”œâ”€â”€ docker-compose.yml   Original (funcional)
+â””â”€â”€ docker-compose.optimized.yml   Otimizado (produÃ§Ã£o)
 ```
 
 ---
 
-## 💡 Recomendação Final
+## ðŸ’¡ RecomendaÃ§Ã£o Final
 
-**Para VM de produção/staging:**
+**Para VM de produÃ§Ã£o/staging:**
 
 ```bash
 cd /srv/magnus-pbx
@@ -308,13 +308,14 @@ mv iax.conf ooh323.conf chan_dahdi.conf meetme.conf _unused/
 
 ---
 
-**✨ Tudo pronto para instalação limpa! Agora o projeto está organizado, documentado e pronto para crescer.**
+**âœ¨ Tudo pronto para instalaÃ§Ã£o limpa! Agora o projeto estÃ¡ organizado, documentado e pronto para crescer.**
 
-📊 **Estatísticas finais:**
+ðŸ“Š **EstatÃ­sticas finais:**
 - 11 arquivos modificados/criados
 - 1623 linhas adicionadas
 - 43 linhas removidas
 - 5 documentos novos
 - 1 script automatizado
-- 2 versões Docker (original + otimizado)
-- 0 configs antigas herdadas 🎉
+- 2 versÃµes Docker (original + otimizado)
+- 0 configs antigas herdadas ðŸŽ‰
+

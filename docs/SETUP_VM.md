@@ -1,18 +1,18 @@
-# 🖥️ Setup na VM Linux
+﻿# ðŸ–¥ï¸ Setup na VM Linux
 
-Guia para configurar o Magnus PBX em uma VM Linux usando o repositório GitHub.
+Guia para configurar o Magnus PBX em uma VM Linux usando o repositÃ³rio GitHub.
 
 ---
 
-## 📋 Pré-requisitos
+## ðŸ“‹ PrÃ©-requisitos
 
-### Software Necessário:
-- ✅ Git
-- ✅ Docker
-- ✅ Docker Compose
-- ✅ Conexão com internet
+### Software NecessÃ¡rio:
+- âœ… Git
+- âœ… Docker
+- âœ… Docker Compose
+- âœ… ConexÃ£o com internet
 
-### Verificar instalação:
+### Verificar instalaÃ§Ã£o:
 ```bash
 git --version        # Git 2.x ou superior
 docker --version     # Docker 20.x ou superior
@@ -21,18 +21,18 @@ docker compose version  # Docker Compose 2.x ou superior
 
 ---
 
-## 🚀 Instalação Inicial (Primeira Vez)
+## ðŸš€ InstalaÃ§Ã£o Inicial (Primeira Vez)
 
-### 1. Clonar o Repositório
+### 1. Clonar o RepositÃ³rio
 
 ```bash
-# Ir para o diretório onde quer instalar
+# Ir para o diretÃ³rio onde quer instalar
 cd /srv
 
 # Clonar o projeto
 git clone https://github.com/wagnercne/magnus-pbx.git
 
-# Entrar no diretório
+# Entrar no diretÃ³rio
 cd magnus-pbx
 ```
 
@@ -42,13 +42,13 @@ cd magnus-pbx
 # Listar estrutura
 ls -lh
 
-# Você deve ver:
+# VocÃª deve ver:
 #   README.md
 #   Dockerfile
 #   docker-compose.yml
 #   asterisk_etc/
 #   scripts/
-#   doc/
+#   docs/
 #   sql/
 ```
 
@@ -68,7 +68,7 @@ docker compose logs -f asterisk-magnus
 ### 4. Executar Deploy Inicial
 
 ```bash
-# Dar permissão de execução nos scripts
+# Dar permissÃ£o de execuÃ§Ã£o nos scripts
 chmod +x scripts/*.sh
 
 # Executar deploy (corrige banco, etc)
@@ -77,7 +77,7 @@ chmod +x scripts/*.sh
 # Aguardar ~30 segundos
 ```
 
-### 5. Validar Instalação
+### 5. Validar InstalaÃ§Ã£o
 
 ```bash
 # Verificar contextos carregados
@@ -91,27 +91,27 @@ docker compose exec asterisk-magnus asterisk -rx "dialplan show *43@ctx-belavist
 
 ---
 
-## 🔄 Atualizações (Quando Houver Mudanças no Windows)
+## ðŸ”„ AtualizaÃ§Ãµes (Quando Houver MudanÃ§as no Windows)
 
-### Cenário: Você editou arquivos no Windows e fez push
+### CenÃ¡rio: VocÃª editou arquivos no Windows e fez push
 
 ```bash
 # Na VM Linux
 cd /srv/magnus-pbx
 
-# Puxar atualizações
+# Puxar atualizaÃ§Ãµes
 git pull origin main
 
-# Se houve mudanças no banco ou dialplan
+# Se houve mudanÃ§as no banco ou dialplan
 ./scripts/deploy.sh
 
-# Se só mudou dialplan
+# Se sÃ³ mudou dialplan
 ./scripts/reload-dialplan.sh
 ```
 
 ---
 
-## 🎯 Ativar Dialplan Modular (Opcional)
+## ðŸŽ¯ Ativar Dialplan Modular (Opcional)
 
 Se decidir migrar para a estrutura modular:
 
@@ -124,10 +124,10 @@ ls -lh asterisk_etc/extensions-features.conf
 ls -lh asterisk_etc/routing.conf
 ls -lh asterisk_etc/tenants.conf
 
-# Executar script de ativação
+# Executar script de ativaÃ§Ã£o
 ./scripts/ativar-dialplan-modular.sh
 
-# O script irá:
+# O script irÃ¡:
 #   1. Fazer backup do extensions.conf atual
 #   2. Ativar o dialplan modular
 #   3. Reiniciar Asterisk
@@ -136,43 +136,43 @@ ls -lh asterisk_etc/tenants.conf
 
 ---
 
-## 📁 Estrutura do Projeto na VM
+## ðŸ“ Estrutura do Projeto na VM
 
 ```
 /srv/magnus-pbx/
-├── asterisk_etc/           # Configurações do Asterisk
-│   ├── extensions.conf         → Dialplan atual (monolítico ou modular)
-│   ├── extensions-modular.conf → Master file (se modular)
-│   ├── extensions-features.conf → Feature codes (*43, *500)
-│   ├── routing.conf             → Lógica de roteamento
-│   ├── tenants.conf             → Contextos dos tenants
-│   ├── pjsip.conf              → Configuração SIP
-│   ├── modules.conf            → Módulos do Asterisk
-│   └── res_config_pgsql.conf   → Conexão com PostgreSQL
-│
-├── scripts/                # Scripts de automação
-│   ├── deploy.sh               → Deploy completo
-│   ├── reload-dialplan.sh      → Reload rápido
-│   ├── ativar-dialplan-modular.sh → Migrar para modular
-│   ├── diagnostico.sh          → Diagnóstico completo
-│   └── fix-dialplan.sh         → Forçar reload
-│
-├── sql/                    # Scripts SQL
-│   ├── init.sql                → Estrutura do banco
-│   └── 03_fix_and_validate.sql → Correções
-│
-├── doc/                    # Documentação
-│   ├── COMO_INICIAR.md
-│   ├── GUIA_DE_TESTES.md
-│   └── ...
-│
-├── docker-compose.yml      # Orquestração
-└── Dockerfile              # Imagem Asterisk
+â”œâ”€â”€ asterisk_etc/           # ConfiguraÃ§Ãµes do Asterisk
+â”‚   â”œâ”€â”€ extensions.conf         â†’ Dialplan atual (monolÃ­tico ou modular)
+â”‚   â”œâ”€â”€ extensions-modular.conf â†’ Master file (se modular)
+â”‚   â”œâ”€â”€ extensions-features.conf â†’ Feature codes (*43, *500)
+â”‚   â”œâ”€â”€ routing.conf             â†’ LÃ³gica de roteamento
+â”‚   â”œâ”€â”€ tenants.conf             â†’ Contextos dos tenants
+â”‚   â”œâ”€â”€ pjsip.conf              â†’ ConfiguraÃ§Ã£o SIP
+â”‚   â”œâ”€â”€ modules.conf            â†’ MÃ³dulos do Asterisk
+â”‚   â””â”€â”€ res_config_pgsql.conf   â†’ ConexÃ£o com PostgreSQL
+â”‚
+â”œâ”€â”€ scripts/                # Scripts de automaÃ§Ã£o
+â”‚   â”œâ”€â”€ deploy.sh               â†’ Deploy completo
+â”‚   â”œâ”€â”€ reload-dialplan.sh      â†’ Reload rÃ¡pido
+â”‚   â”œâ”€â”€ ativar-dialplan-modular.sh â†’ Migrar para modular
+â”‚   â”œâ”€â”€ diagnostico.sh          â†’ DiagnÃ³stico completo
+â”‚   â””â”€â”€ fix-dialplan.sh         â†’ ForÃ§ar reload
+â”‚
+â”œâ”€â”€ sql/                    # Scripts SQL
+â”‚   â”œâ”€â”€ init.sql                â†’ Estrutura do banco
+â”‚   â””â”€â”€ 03_fix_and_validate.sql â†’ CorreÃ§Ãµes
+â”‚
+â”œâ”€â”€ docs/                    # DocumentaÃ§Ã£o
+â”‚   â”œâ”€â”€ COMO_INICIAR.md
+â”‚   â”œâ”€â”€ GUIA_DE_TESTES.md
+â”‚   â””â”€â”€ ...
+â”‚
+â”œâ”€â”€ docker-compose.yml      # OrquestraÃ§Ã£o
+â””â”€â”€ Dockerfile              # Imagem Asterisk
 ```
 
 ---
 
-## 🔧 Comandos Úteis
+## ðŸ”§ Comandos Ãšteis
 
 ### Docker
 
@@ -184,7 +184,7 @@ docker compose ps
 docker compose logs -f asterisk-magnus
 docker compose logs -f postgres-magnus
 
-# Reiniciar um serviço
+# Reiniciar um serviÃ§o
 docker compose restart asterisk-magnus
 
 # Parar tudo
@@ -193,7 +193,7 @@ docker compose down
 # Iniciar tudo
 docker compose up -d
 
-# Rebuild (após mudanças no Dockerfile)
+# Rebuild (apÃ³s mudanÃ§as no Dockerfile)
 docker compose up -d --build
 ```
 
@@ -212,7 +212,7 @@ docker compose exec asterisk-magnus asterisk -rx "pjsip show endpoints"
 # Ver contextos do dialplan
 docker compose exec asterisk-magnus asterisk -rx "dialplan show contexts"
 
-# Ver módulos carregados
+# Ver mÃ³dulos carregados
 docker compose exec asterisk-magnus asterisk -rx "module show like pbx"
 docker compose exec asterisk-magnus asterisk -rx "module show like res_config"
 ```
@@ -230,27 +230,27 @@ docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "\dt"
 docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "SELECT id, context, transport FROM ps_endpoints;"
 ```
 
-### Scripts de Manutenção
+### Scripts de ManutenÃ§Ã£o
 
 ```bash
-# Deploy completo (use após mudanças no banco)
+# Deploy completo (use apÃ³s mudanÃ§as no banco)
 ./scripts/deploy.sh
 
-# Reload rápido (use após editar dialplan)
+# Reload rÃ¡pido (use apÃ³s editar dialplan)
 ./scripts/reload-dialplan.sh
 
-# Diagnóstico (quando algo não funcionar)
+# DiagnÃ³stico (quando algo nÃ£o funcionar)
 ./scripts/diagnostico.sh
 
-# Forçar reload completo (quando reload simples não resolver)
+# ForÃ§ar reload completo (quando reload simples nÃ£o resolver)
 ./scripts/fix-dialplan.sh
 ```
 
 ---
 
-## 🧪 Testar Instalação
+## ðŸ§ª Testar InstalaÃ§Ã£o
 
-### 1. Verificar se está tudo rodando
+### 1. Verificar se estÃ¡ tudo rodando
 
 ```bash
 docker compose ps
@@ -259,7 +259,7 @@ docker compose ps
 #   postgres-magnus  ... Up
 ```
 
-### 2. Verificar módulos carregados
+### 2. Verificar mÃ³dulos carregados
 
 ```bash
 docker compose exec asterisk-magnus asterisk -rx "module show like pbx_config"
@@ -285,14 +285,14 @@ docker compose exec asterisk-magnus asterisk -rx "dialplan show *43@ctx-belavist
 
 ```bash
 docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "SELECT COUNT(*) FROM ps_endpoints;"
-# Deve retornar um número (ex: 6 endpoints)
+# Deve retornar um nÃºmero (ex: 6 endpoints)
 ```
 
 ---
 
-## 🐛 Troubleshooting
+## ðŸ› Troubleshooting
 
-### Problema: Containers não sobem
+### Problema: Containers nÃ£o sobem
 
 ```bash
 # Ver erros
@@ -301,42 +301,42 @@ docker compose logs
 # Verificar portas em uso
 netstat -tulpn | grep -E '5432|5060'
 
-# Remover tudo e começar de novo
+# Remover tudo e comeÃ§ar de novo
 docker compose down -v
 docker compose up -d
 ```
 
-### Problema: Dialplan não carrega
+### Problema: Dialplan nÃ£o carrega
 
 ```bash
-# Verificar se pbx_config está carregado
+# Verificar se pbx_config estÃ¡ carregado
 docker compose exec asterisk-magnus asterisk -rx "module show like pbx_config"
 
-# Se não estiver, carregar
+# Se nÃ£o estiver, carregar
 docker compose exec asterisk-magnus asterisk -rx "module load pbx_config.so"
 
 # Recarregar dialplan
 ./scripts/reload-dialplan.sh
 ```
 
-### Problema: Ramais não registram
+### Problema: Ramais nÃ£o registram
 
 ```bash
 # Verificar endpoints no banco
 docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "SELECT id, context, transport FROM ps_endpoints;"
 
-# Verificar se contextos estão corretos (deve ser ctx-{slug})
+# Verificar se contextos estÃ£o corretos (deve ser ctx-{slug})
 # Se estiverem NULL, executar:
 ./scripts/deploy.sh
 ```
 
-### Problema: Git pull dá conflito
+### Problema: Git pull dÃ¡ conflito
 
 ```bash
-# Descartar mudanças locais
+# Descartar mudanÃ§as locais
 git reset --hard origin/main
 
-# Ou fazer backup das mudanças
+# Ou fazer backup das mudanÃ§as
 git stash
 git pull origin main
 git stash pop
@@ -344,18 +344,18 @@ git stash pop
 
 ---
 
-## 📊 Monitoramento
+## ðŸ“Š Monitoramento
 
 ### Ver uso de recursos
 
 ```bash
-# CPU e Memória dos containers
+# CPU e MemÃ³ria dos containers
 docker stats
 
-# Espaço em disco
+# EspaÃ§o em disco
 df -h
 
-# Logs do Asterisk (últimas 100 linhas)
+# Logs do Asterisk (Ãºltimas 100 linhas)
 docker compose logs --tail=100 asterisk-magnus
 ```
 
@@ -371,9 +371,9 @@ docker compose exec asterisk-magnus asterisk -rx "core show channels"
 
 ---
 
-## 🔐 Segurança
+## ðŸ” SeguranÃ§a
 
-### Alterar senhas padrão
+### Alterar senhas padrÃ£o
 
 ```bash
 # PostgreSQL (editar docker-compose.yml)
@@ -387,7 +387,7 @@ UPDATE ps_auths SET password = 'nova_senha_segura' WHERE id = '1001@belavista';
 ### Firewall
 
 ```bash
-# Permitir apenas portas necessárias
+# Permitir apenas portas necessÃ¡rias
 sudo ufw allow 5060/udp  # SIP
 sudo ufw allow 10000:20000/udp  # RTP (voz)
 sudo ufw allow 22/tcp  # SSH
@@ -396,7 +396,7 @@ sudo ufw enable
 
 ---
 
-## 🔄 Workflow Desenvolvimento → Produção
+## ðŸ”„ Workflow Desenvolvimento â†’ ProduÃ§Ã£o
 
 ### 1. No Windows (Desenvolvimento)
 
@@ -410,14 +410,14 @@ git commit -m "feat: Adicionar novo tenant"
 git push origin main
 ```
 
-### 2. Na VM (Produção)
+### 2. Na VM (ProduÃ§Ã£o)
 
 ```bash
-# Puxar mudanças
+# Puxar mudanÃ§as
 cd /srv/magnus-pbx
 git pull origin main
 
-# Aplicar mudanças
+# Aplicar mudanÃ§as
 ./scripts/deploy.sh
 
 # Verificar
@@ -426,27 +426,27 @@ docker compose logs -f asterisk-magnus
 
 ---
 
-## 📚 Próximos Passos
+## ðŸ“š PrÃ³ximos Passos
 
-1. **Configurar Softphones** → [CONFIGURACAO_SOFTPHONES.md](CONFIGURACAO_SOFTPHONES.md)
-2. **Testar Funcionalidades** → [GUIA_DE_TESTES.md](GUIA_DE_TESTES.md)
-3. **Adicionar Novos Tenants** → Editar `sql/init.sql` + `asterisk_etc/tenants.conf`
-4. **Configurar Trunks SIP** → Editar `asterisk_etc/pjsip.conf`
-5. **Setup Backend C#** → [SETUP_BACKEND.md](SETUP_BACKEND.md)
-6. **Setup Frontend Vue** → [SETUP_FRONTEND.md](SETUP_FRONTEND.md)
+1. **Configurar Softphones** â†’ [CONFIGURACAO_SOFTPHONES.md](CONFIGURACAO_SOFTPHONES.md)
+2. **Testar Funcionalidades** â†’ [GUIA_DE_TESTES.md](GUIA_DE_TESTES.md)
+3. **Adicionar Novos Tenants** â†’ Editar `sql/init.sql` + `asterisk_etc/tenants.conf`
+4. **Configurar Trunks SIP** â†’ Editar `asterisk_etc/pjsip.conf`
+5. **Setup Backend C#** â†’ [SETUP_BACKEND.md](SETUP_BACKEND.md)
+6. **Setup Frontend Vue** â†’ [SETUP_FRONTEND.md](SETUP_FRONTEND.md)
 
 ---
 
-## 🔗 Links Úteis
+## ðŸ”— Links Ãšteis
 
-- **Repositório GitHub:** https://github.com/wagnercne/magnus-pbx
-- **Documentação Asterisk:** https://docs.asterisk.org/
+- **RepositÃ³rio GitHub:** https://github.com/wagnercne/magnus-pbx
+- **DocumentaÃ§Ã£o Asterisk:** https://docs.asterisk.org/
 - **Docker Compose:** https://docs.docker.com/compose/
 - **PostgreSQL:** https://www.postgresql.org/docs/
 
 ---
 
-## 🆘 Suporte
+## ðŸ†˜ Suporte
 
 Se encontrar problemas:
 
@@ -454,3 +454,4 @@ Se encontrar problemas:
 2. Executar `./scripts/diagnostico.sh`
 3. Consultar [QUICK_FIX.md](QUICK_FIX.md)
 4. Ver issues no GitHub: https://github.com/wagnercne/magnus-pbx/issues
+

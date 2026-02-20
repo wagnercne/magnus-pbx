@@ -1,10 +1,10 @@
-# 🔄 Reestruturação do Banco de Dados Magnus PBX
+﻿# ðŸ”„ ReestruturaÃ§Ã£o do Banco de Dados Magnus PBX
 
-## 📋 Problema Identificado
+## ðŸ“‹ Problema Identificado
 
 O projeto tinha **conflito de estruturas CDR**:
 
-### ❌ Estrutura Antiga (sql/init.sql)
+### âŒ Estrutura Antiga (sql/init.sql)
 ```sql
 CREATE TABLE cdr (
     uniqueid VARCHAR(150) PRIMARY KEY,  -- PK no uniqueid
@@ -18,73 +18,73 @@ CREATE TABLE cdr (
 );
 ```
 
-### ❌ Estrutura Nova Conflitante (sql/04_create_cdr_table.sql)
+### âŒ Estrutura Nova Conflitante (sql/04_create_cdr_table.sql)
 ```sql
 CREATE TABLE IF NOT EXISTS cdr (
     id SERIAL PRIMARY KEY,              -- PK diferente!
     calldate TIMESTAMP,                 -- Campo diferente
-    uniqueid VARCHAR(150),              -- Não é PK
+    uniqueid VARCHAR(150),              -- NÃ£o Ã© PK
     linkedid VARCHAR(150),              -- Novo campo
     -- 26 campos (estrutura Asterisk 22 moderna)
 );
 ```
 
-### ⚠️ Resultado
-- **Asterisk não sabia qual estrutura usar**
+### âš ï¸ Resultado
+- **Asterisk nÃ£o sabia qual estrutura usar**
 - **Scripts SQL conflitantes na pasta `/docker-entrypoint-initdb.d`**
 - **Banco ficava inconsistente**
 
-## ✅ Solução: Estrutura Unificada
+## âœ… SoluÃ§Ã£o: Estrutura Unificada
 
 ### 1. Arquitetura Nova
 
 ```
 sql/
-├── 01_init_schema.sql      ← Schema completo (tabela CDR moderna)
-├── 02_sample_data.sql      ← Dados de exemplo (3 tenants, 5 ramais)
-├── 03_fix_and_validate.sql ← Scripts utilitários (não executa auto)
-└── 99_deprecated/          ← Arquivos antigos movidos aqui
+â”œâ”€â”€ 01_init_schema.sql      â† Schema completo (tabela CDR moderna)
+â”œâ”€â”€ 02_sample_data.sql      â† Dados de exemplo (3 tenants, 5 ramais)
+â”œâ”€â”€ 03_fix_and_validate.sql â† Scripts utilitÃ¡rios (nÃ£o executa auto)
+â””â”€â”€ 99_deprecated/          â† Arquivos antigos movidos aqui
 ```
 
-### 2. Ordem de Execução
+### 2. Ordem de ExecuÃ§Ã£o
 
-O PostgreSQL executa arquivos em **ordem alfabética** no `/docker-entrypoint-initdb.d`:
+O PostgreSQL executa arquivos em **ordem alfabÃ©tica** no `/docker-entrypoint-initdb.d`:
 
-1. ✅ `01_init_schema.sql` → Cria todas as tabelas (incluindo CDR moderna)
-2. ✅ `02_sample_data.sql` → Insere 3 tenants, 5 ramais, 5 CDRs de teste
-3. ⏭️ `03_fix_and_validate.sql` → **NÃO executa** (mantenha como utilitário)
+1. âœ… `01_init_schema.sql` â†’ Cria todas as tabelas (incluindo CDR moderna)
+2. âœ… `02_sample_data.sql` â†’ Insere 3 tenants, 5 ramais, 5 CDRs de teste
+3. â­ï¸ `03_fix_and_validate.sql` â†’ **NÃƒO executa** (mantenha como utilitÃ¡rio)
 
 ### 3. Tabela CDR Final (Asterisk 22 Moderna)
 
 ```sql
 CREATE TABLE cdr (
-    id BIGSERIAL PRIMARY KEY,           -- ✅ Chave primária autoincremental
-    calldate TIMESTAMP,                 -- ✅ Data/hora da chamada
-    src VARCHAR(80),                    -- ✅ Origem
-    dst VARCHAR(80),                    -- ✅ Destino
-    duration INTEGER,                   -- ✅ Duração total
-    billsec INTEGER,                    -- ✅ Duração tarifável
-    disposition VARCHAR(45),            -- ✅ Status (ANSWERED, NO ANSWER, BUSY)
-    uniqueid VARCHAR(150),              -- ✅ ID único da chamada
-    linkedid VARCHAR(150),              -- ✅ ID de chamadas relacionadas (NEW!)
-    sequence INTEGER,                   -- ✅ Sequência (NEW!)
-    peeraccount VARCHAR(80),            -- ✅ Conta do ramal chamado (NEW!)
-    tenant_id INT,                      -- ✅ Multi-tenant (Magnus custom)
+    id BIGSERIAL PRIMARY KEY,           -- âœ… Chave primÃ¡ria autoincremental
+    calldate TIMESTAMP,                 -- âœ… Data/hora da chamada
+    src VARCHAR(80),                    -- âœ… Origem
+    dst VARCHAR(80),                    -- âœ… Destino
+    duration INTEGER,                   -- âœ… DuraÃ§Ã£o total
+    billsec INTEGER,                    -- âœ… DuraÃ§Ã£o tarifÃ¡vel
+    disposition VARCHAR(45),            -- âœ… Status (ANSWERED, NO ANSWER, BUSY)
+    uniqueid VARCHAR(150),              -- âœ… ID Ãºnico da chamada
+    linkedid VARCHAR(150),              -- âœ… ID de chamadas relacionadas (NEW!)
+    sequence INTEGER,                   -- âœ… SequÃªncia (NEW!)
+    peeraccount VARCHAR(80),            -- âœ… Conta do ramal chamado (NEW!)
+    tenant_id INT,                      -- âœ… Multi-tenant (Magnus custom)
     -- ... 20 campos totais
 );
 ```
 
 ### 4. Compatibilidade
 
-**Mantém compatibilidade com:**
-- ✅ Asterisk 22.8.2 (cdr_pgsql.so)
-- ✅ Multi-tenant (tenant_id)
-- ✅ Campos legados (src, dst, duration, billsec)
-- ✅ Campos modernos (linkedid, sequence, peeraccount)
+**MantÃ©m compatibilidade com:**
+- âœ… Asterisk 22.8.2 (cdr_pgsql.so)
+- âœ… Multi-tenant (tenant_id)
+- âœ… Campos legados (src, dst, duration, billsec)
+- âœ… Campos modernos (linkedid, sequence, peeraccount)
 
-## 🚀 Como Resetar o Banco
+## ðŸš€ Como Resetar o Banco
 
-### Opção 1: Script Automatizado (Recomendado)
+### OpÃ§Ã£o 1: Script Automatizado (Recomendado)
 ```bash
 cd /srv/magnus-pbx
 git pull origin main
@@ -93,13 +93,13 @@ chmod +x scripts/reset-database.sh
 ```
 
 **O script faz:**
-1. 🛑 Para containers
-2. 🗑️ Remove `postgres_data/`
-3. 🚀 Recria container PostgreSQL
-4. ⏳ Aguarda banco ficar pronto
-5. ✅ Executa `01_init_schema.sql` e `02_sample_data.sql` automaticamente
+1. ðŸ›‘ Para containers
+2. ðŸ—‘ï¸ Remove `postgres_data/`
+3. ðŸš€ Recria container PostgreSQL
+4. â³ Aguarda banco ficar pronto
+5. âœ… Executa `01_init_schema.sql` e `02_sample_data.sql` automaticamente
 
-### Opção 2: Manual
+### OpÃ§Ã£o 2: Manual
 ```bash
 # 1. Parar tudo
 docker compose down
@@ -121,7 +121,7 @@ docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "\dt"
 docker compose exec postgres-magnus psql -U admin_magnus -d magnus_pbx -c "SELECT id, context FROM ps_endpoints;"
 ```
 
-## 📊 Após o Reset
+## ðŸ“Š ApÃ³s o Reset
 
 ### 1. Verificar Estrutura
 ```bash
@@ -167,9 +167,9 @@ FROM ps_endpoints;
 SELECT * FROM cdr_readable ORDER BY "Data/Hora" DESC LIMIT 5;
 ```
 
-## 🎯 Caminhos de CDR no Asterisk
+## ðŸŽ¯ Caminhos de CDR no Asterisk
 
-### cdr_pgsql.conf (já configurado)
+### cdr_pgsql.conf (jÃ¡ configurado)
 ```ini
 [global]
 hostname=postgres-magnus
@@ -177,7 +177,7 @@ port=5432
 dbname=magnus_pbx
 user=admin_magnus
 password=magnus123
-table=cdr        ← ✅ Usa a tabela nova!
+table=cdr        â† âœ… Usa a tabela nova!
 encoding=utf8
 ```
 
@@ -192,35 +192,35 @@ encoding=utf8
 | billsec       | billsec          | INTEGER |
 | disposition   | disposition      | VARCHAR(45) |
 | uniqueid      | uniqueid         | VARCHAR(150) |
-| **linkedid**  | linkedid         | VARCHAR(150) ✨ |
-| **sequence**  | sequence         | INTEGER ✨ |
+| **linkedid**  | linkedid         | VARCHAR(150) âœ¨ |
+| **sequence**  | sequence         | INTEGER âœ¨ |
 
-## 📝 Diferenças Principais
+## ðŸ“ DiferenÃ§as Principais
 
 ### Antes (Estrutura Antiga)
-- ❌ `uniqueid` era PRIMARY KEY (não permitia registros duplicados)
-- ❌ Campos `start`, `answer`, `end` separados
-- ❌ Sem suporte a `linkedid` (chamadas relacionadas)
-- ❌ Sem `sequence` (ordem de eventos)
+- âŒ `uniqueid` era PRIMARY KEY (nÃ£o permitia registros duplicados)
+- âŒ Campos `start`, `answer`, `end` separados
+- âŒ Sem suporte a `linkedid` (chamadas relacionadas)
+- âŒ Sem `sequence` (ordem de eventos)
 
 ### Depois (Estrutura Nova)
-- ✅ `id BIGSERIAL` é PRIMARY KEY (permite múltiplos registros da mesma chamada)
-- ✅ Campo único `calldate` ao invés de 3 campos
-- ✅ Suporte a `linkedid` (rastreia transferências, conferências)
-- ✅ Suporte a `sequence` (ordem cronológica de eventos CDR)
-- ✅ Campo `peeraccount` (identifica conta do outro lado)
-- ✅ Multi-tenant (`tenant_id`)
+- âœ… `id BIGSERIAL` Ã© PRIMARY KEY (permite mÃºltiplos registros da mesma chamada)
+- âœ… Campo Ãºnico `calldate` ao invÃ©s de 3 campos
+- âœ… Suporte a `linkedid` (rastreia transferÃªncias, conferÃªncias)
+- âœ… Suporte a `sequence` (ordem cronolÃ³gica de eventos CDR)
+- âœ… Campo `peeraccount` (identifica conta do outro lado)
+- âœ… Multi-tenant (`tenant_id`)
 
-## 🔍 Troubleshooting
+## ðŸ” Troubleshooting
 
 ### Erro: "relation cdr already exists"
 ```bash
-# Significa que o banco não foi resetado
+# Significa que o banco nÃ£o foi resetado
 sudo rm -rf postgres_data
 docker compose up -d postgres-magnus
 ```
 
-### Arquivos SQL não executam
+### Arquivos SQL nÃ£o executam
 ```bash
 # Verificar montagem do volume
 docker compose exec postgres-magnus ls -la /docker-entrypoint-initdb.d
@@ -231,36 +231,37 @@ docker compose exec postgres-magnus ls -la /docker-entrypoint-initdb.d
 # 03_fix_and_validate.sql
 ```
 
-### CDR não está gravando
+### CDR nÃ£o estÃ¡ gravando
 ```bash
-# 1. Verificar módulo carregado
+# 1. Verificar mÃ³dulo carregado
 docker compose exec asterisk-magnus asterisk -rx "module show like cdr_pgsql"
 
-# 2. Verificar conexão
+# 2. Verificar conexÃ£o
 docker compose exec asterisk-magnus asterisk -rx "cdr status"
 
 # 3. Ver logs
 docker compose logs asterisk-magnus | grep -i cdr
 ```
 
-## 📚 Arquivos Relacionados
+## ðŸ“š Arquivos Relacionados
 
 - [scripts/reset-database.sh](../scripts/reset-database.sh) - Script de reset automatizado
 - [sql/01_init_schema.sql](../sql/01_init_schema.sql) - Schema completo
 - [sql/02_sample_data.sql](../sql/02_sample_data.sql) - Dados de exemplo
-- [asterisk_etc/cdr_pgsql.conf](../asterisk_etc/cdr_pgsql.conf) - Configuração CDR PostgreSQL
-- [doc/CDR_QUERIES.md](./CDR_QUERIES.md) - 50+ consultas SQL úteis
-- [doc/CDR_DEPLOY.md](./CDR_DEPLOY.md) - Guia de implantação
+- [asterisk_etc/cdr_pgsql.conf](../asterisk_etc/cdr_pgsql.conf) - ConfiguraÃ§Ã£o CDR PostgreSQL
+- [docs/CDR_QUERIES.md](./CDR_QUERIES.md) - 50+ consultas SQL Ãºteis
+- [docs/CDR_DEPLOY.md](./CDR_DEPLOY.md) - Guia de implantaÃ§Ã£o
 
-## ✅ Checklist Pós-Reset
+## âœ… Checklist PÃ³s-Reset
 
 - [ ] Banco de dados resetado com sucesso
 - [ ] Tabela `cdr` com estrutura moderna verificada
-- [ ] 5 ramais de teste visíveis no banco
-- [ ] CDRs de exemplo consultáveis
+- [ ] 5 ramais de teste visÃ­veis no banco
+- [ ] CDRs de exemplo consultÃ¡veis
 - [ ] Asterisk conectado ao banco (sem erros no log)
-- [ ] Módulo `cdr_pgsql.so` carregado
+- [ ] MÃ³dulo `cdr_pgsql.so` carregado
 - [ ] Teste *43 gravando CDR corretamente
 - [ ] View `cdr_readable` funcionando
 
-Agora o banco está **limpo, organizado e com estrutura moderna**! 🎉
+Agora o banco estÃ¡ **limpo, organizado e com estrutura moderna**! ðŸŽ‰
+

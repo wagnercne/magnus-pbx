@@ -1,10 +1,10 @@
-# 🛠️ Scripts do Magnus PBX
+﻿# ðŸ› ï¸ Scripts do Magnus PBX
 
-Esta pasta contém todos os scripts de automação e manutenção do sistema.
+Esta pasta contÃ©m todos os scripts de automaÃ§Ã£o e manutenÃ§Ã£o do sistema.
 
-## 📋 Scripts Principais
+## ðŸ“‹ Scripts Principais
 
-### � Preparação e Sincronização
+### ï¿½ PreparaÃ§Ã£o e SincronizaÃ§Ã£o
 
 #### `copiar-para-vm.ps1`
 **Preparar arquivos para copiar do Windows para VM Linux**
@@ -13,7 +13,7 @@ Esta pasta contém todos os scripts de automação e manutenção do sistema.
 # Verificar arquivos e gerar comandos
 .\scripts\copiar-para-vm.ps1
 
-# OU gerar script SCP automático
+# OU gerar script SCP automÃ¡tico
 .\scripts\copiar-para-vm.ps1 -VMUser "user" -VMHost "192.168.1.100" -VMPath "/srv/magnus-pbx"
 ```
 
@@ -21,15 +21,15 @@ Esta pasta contém todos os scripts de automação e manutenção do sistema.
 - Verifica se os 5 arquivos modulares existem
 - Mostra tamanho de cada arquivo
 - Gera comandos Git, SCP, ou manual
-- Cria script `copiar-scp.sh` automaticamente (se parâmetros fornecidos)
+- Cria script `copiar-scp.sh` automaticamente (se parÃ¢metros fornecidos)
 
 **Use quando:** Antes de ativar dialplan modular na VM.
 
-**Saída:** Lista de comandos para sincronizar Windows → Linux
+**SaÃ­da:** Lista de comandos para sincronizar Windows â†’ Linux
 
 ---
 
-### �🚀 Deploy e Configuração
+### ï¿½ðŸš€ Deploy e ConfiguraÃ§Ã£o
 
 #### `deploy.sh` / `deploy.ps1`
 **Deploy completo do sistema**
@@ -47,14 +47,14 @@ Esta pasta contém todos os scripts de automação e manutenção do sistema.
 2. Corrige contextos no banco (`ctx-{slug}`)
 3. Verifica estrutura do banco
 4. Inicia o Asterisk
-5. Verifica módulos carregados (pbx_config, res_config_pgsql)
+5. Verifica mÃ³dulos carregados (pbx_config, res_config_pgsql)
 6. Recarrega dialplan
-7. Valida contextos e extensões
+7. Valida contextos e extensÃµes
 
 **Use quando:**
-- Primeira instalação
-- Após alterações no banco de dados
-- Após alterações em arquivos de configuração
+- Primeira instalaÃ§Ã£o
+- ApÃ³s alteraÃ§Ãµes no banco de dados
+- ApÃ³s alteraÃ§Ãµes em arquivos de configuraÃ§Ã£o
 
 ---
 
@@ -68,17 +68,17 @@ Esta pasta contém todos os scripts de automação e manutenção do sistema.
 **O que faz:**
 1. Verifica se arquivos modulares existem
 2. Faz backup do `extensions.conf` atual
-3. Copia `extensions-modular.conf` → `extensions.conf`
+3. Copia `extensions-modular.conf` â†’ `extensions.conf`
 4. Reinicia Asterisk
 5. Valida o novo dialplan
 
 **Use quando:**
-- Quiser organizar o dialplan em múltiplos arquivos
-- [Ver documentação completa](../doc/DIALPLAN_QUAL_USAR.md)
+- Quiser organizar o dialplan em mÃºltiplos arquivos
+- [Ver documentaÃ§Ã£o completa](./DIALPLAN_QUAL_USAR.md)
 
 ---
 
-### 🔄 Reload e Manutenção
+### ðŸ”„ Reload e ManutenÃ§Ã£o
 
 #### `reload-dialplan.sh` / `reload-dialplan.ps1`
 **Recarrega apenas o dialplan**
@@ -92,20 +92,20 @@ Esta pasta contém todos os scripts de automação e manutenção do sistema.
 ```
 
 **O que faz:**
-1. Recarrega módulo `pbx_config.so`
-2. Verifica se o módulo está carregado
+1. Recarrega mÃ³dulo `pbx_config.so`
+2. Verifica se o mÃ³dulo estÃ¡ carregado
 
 **Use quando:**
 - Alterou `extensions.conf`
 - Adicionou novos feature codes
-- Não quer reiniciar o Asterisk completamente
+- NÃ£o quer reiniciar o Asterisk completamente
 
 ---
 
-### 🔍 Diagnóstico
+### ðŸ” DiagnÃ³stico
 
 #### `diagnostico.sh`
-**Diagnóstico completo do sistema**
+**DiagnÃ³stico completo do sistema**
 
 ```bash
 ./scripts/diagnostico.sh > diagnostico.log
@@ -115,37 +115,37 @@ cat diagnostico.log
 **O que faz:**
 1. Verifica arquivo `extensions.conf` no host
 2. Verifica arquivo no container
-3. Verifica conteúdo dos contextos
-4. Verifica configuração de módulos
+3. Verifica conteÃºdo dos contextos
+4. Verifica configuraÃ§Ã£o de mÃ³dulos
 5. Lista todos os contextos do Asterisk
 6. Verifica endpoints no PostgreSQL
 7. Mostra logs do Asterisk
 
 **Use quando:**
-- Algo não está funcionando
-- Precisa de informações completas para debug
-- Quer validar toda a configuração
+- Algo nÃ£o estÃ¡ funcionando
+- Precisa de informaÃ§Ãµes completas para debug
+- Quer validar toda a configuraÃ§Ã£o
 
 ---
 
 #### `fix-dialplan.sh`
-**Força recarga completa do dialplan**
+**ForÃ§a recarga completa do dialplan**
 
 ```bash
 ./scripts/fix-dialplan.sh
 ```
 
 **O que faz:**
-1. Reinicia container do Asterisk (força leitura de arquivos)
-2. Verifica módulo `pbx_config.so`
-3. Lista contextos disponíveis
+1. Reinicia container do Asterisk (forÃ§a leitura de arquivos)
+2. Verifica mÃ³dulo `pbx_config.so`
+3. Lista contextos disponÃ­veis
 4. Mostra contexto completo `ctx-belavista`
 5. Verifica especificamente o `*43`
 
 **Use quando:**
-- `reload-dialplan.sh` não resolveu
-- Contextos não estão aparecendo
-- Precisa de diagnóstico + fix ao mesmo tempo
+- `reload-dialplan.sh` nÃ£o resolveu
+- Contextos nÃ£o estÃ£o aparecendo
+- Precisa de diagnÃ³stico + fix ao mesmo tempo
 
 ---
 
@@ -157,31 +157,31 @@ cat diagnostico.log
 ```
 
 **O que faz:**
-1. Cria diretório `/var/log/asterisk/cdr-csv/`
-2. Cria diretório `/var/log/asterisk/cdr/`
-3. Cria diretório `/var/spool/asterisk/monitor/`
-4. Cria diretório `/var/spool/asterisk/voicemail/`
-5. Ajusta permissões (asterisk:asterisk)
-6. Recarrega módulo `cdr_csv.so`
+1. Cria diretÃ³rio `/var/log/asterisk/cdr-csv/`
+2. Cria diretÃ³rio `/var/log/asterisk/cdr/`
+3. Cria diretÃ³rio `/var/spool/asterisk/monitor/`
+4. Cria diretÃ³rio `/var/spool/asterisk/voicemail/`
+5. Ajusta permissÃµes (asterisk:asterisk)
+6. Recarrega mÃ³dulo `cdr_csv.so`
 
 **Use quando:**
 - Ver erro "Unable to open file .../Master.csv"
 - Ver erro "Unable to write CSV record to master"
 - Logs mostram problema com CDR
 
-**Problema típico:**
+**Problema tÃ­pico:**
 ```
 ERROR: Unable to open file /var/log/asterisk/cdr-csv//Master.csv : No such file or directory
 ```
 
-**Solução:** Execute o script uma vez, os erros vão sumir.
+**SoluÃ§Ã£o:** Execute o script uma vez, os erros vÃ£o sumir.
 
 ---
 
-### 🚪 Hardware (Portaria Virtual)
+### ðŸšª Hardware (Portaria Virtual)
 
 #### `open_gate.sh`
-**Aciona abertura de portões/portas**
+**Aciona abertura de portÃµes/portas**
 
 ```bash
 # Chamado automaticamente pelo dialplan via System()
@@ -192,46 +192,46 @@ ERROR: Unable to open file /var/log/asterisk/cdr-csv//Master.csv : No such file 
 ```
 
 **O que faz:**
-1. Tenta 4 métodos de abertura (GPIO, HTTP, MQTT, AMI)
+1. Tenta 4 mÃ©todos de abertura (GPIO, HTTP, MQTT, AMI)
 2. Loga evento em `/var/log/asterisk/gate_openings.log`
-3. Envia notificação via API backend
+3. Envia notificaÃ§Ã£o via API backend
 
-**Métodos suportados:**
+**MÃ©todos suportados:**
 - **GPIO** - Raspberry Pi (pinos 17, 27, 22)
-- **HTTP** - Relés com API REST
+- **HTTP** - RelÃ©s com API REST
 - **MQTT** - Home Assistant / IoT
 - **AMI** - Via Asterisk originate
 
 **Use quando:**
-- Testar abertura de portão manualmente
+- Testar abertura de portÃ£o manualmente
 - Configurar novo hardware
-- [Ver documentação completa](../doc/ARQUITETURA_HIBRIDA.md)
+- [Ver documentaÃ§Ã£o completa](./ARQUITETURA_HIBRIDA.md)
 
 ---
 
-## 📊 Matriz de Uso
+## ðŸ“Š Matriz de Uso
 
-| Script | Frequência | Demora | Impacto |
+| Script | FrequÃªncia | Demora | Impacto |
 |--------|-----------|--------|---------|
 | `deploy.sh` | 1x por deploy | ~30s | Alto (reinicia Asterisk) |
-| `reload-dialplan.sh` | N vezes durante dev | ~2s | Mínimo (só reload) |
+| `reload-dialplan.sh` | N vezes durante dev | ~2s | MÃ­nimo (sÃ³ reload) |
 | `diagnostico.sh` | Quando houver problema | ~10s | Nenhum (read-only) |
-| `fix-dialplan.sh` | Quando reload falhar | ~15s | Médio (restart Asterisk) |
-| `ativar-dialplan-modular.sh` | 1x (migração) | ~15s | Alto (muda dialplan) |
-| `open_gate.sh` | Automático (dialplan) | <1s | Nenhum (hardware) |
+| `fix-dialplan.sh` | Quando reload falhar | ~15s | MÃ©dio (restart Asterisk) |
+| `ativar-dialplan-modular.sh` | 1x (migraÃ§Ã£o) | ~15s | Alto (muda dialplan) |
+| `open_gate.sh` | AutomÃ¡tico (dialplan) | <1s | Nenhum (hardware) |
 
 ---
 
-## 🎯 Fluxo de Trabalho Típico
+## ðŸŽ¯ Fluxo de Trabalho TÃ­pico
 
-### Primeira Instalação
+### Primeira InstalaÃ§Ã£o
 1. `deploy.sh` - Setup completo
 2. Configurar softphone
 3. Testar `*43`
 
 ### Desenvolvimento (adicionar features)
 1. Editar `extensions.conf`
-2. `reload-dialplan.sh` - Aplicar mudanças
+2. `reload-dialplan.sh` - Aplicar mudanÃ§as
 3. Testar
 4. Repetir
 
@@ -242,29 +242,30 @@ ERROR: Unable to open file /var/log/asterisk/cdr-csv//Master.csv : No such file 
 
 ### Troubleshooting
 1. `diagnostico.sh > log.txt` - Coletar info
-2. Analisar saída
+2. Analisar saÃ­da
 3. `fix-dialplan.sh` - Tentar corrigir
-4. Se não resolver: `deploy.sh` (reset completo)
+4. Se nÃ£o resolver: `deploy.sh` (reset completo)
 
 ---
 
-## 🔒 Permissões (Linux/WSL)
+## ðŸ”’ PermissÃµes (Linux/WSL)
 
 ```bash
-# Dar permissão de execução a todos os scripts
+# Dar permissÃ£o de execuÃ§Ã£o a todos os scripts
 chmod +x scripts/*.sh
 ```
 
 ---
 
-## 📖 Documentação Relacionada
+## ðŸ“– DocumentaÃ§Ã£o Relacionada
 
-- [COMO_INICIAR.md](../doc/COMO_INICIAR.md) - Guia completo de instalação
-- [DIALPLAN_QUAL_USAR.md](../doc/DIALPLAN_QUAL_USAR.md) - Escolher dialplan
-- [MIGRACAO_DIALPLAN.md](../doc/MIGRACAO_DIALPLAN.md) - Migrar para modular
-- [ARQUITETURA_HIBRIDA.md](../doc/ARQUITETURA_HIBRIDA.md) - Portaria virtual
-- [GUIA_DE_TESTES.md](../doc/GUIA_DE_TESTES.md) - Testes completos
+- [COMO_INICIAR.md](./COMO_INICIAR.md) - Guia completo de instalaÃ§Ã£o
+- [DIALPLAN_QUAL_USAR.md](./DIALPLAN_QUAL_USAR.md) - Escolher dialplan
+- [MIGRACAO_DIALPLAN.md](./MIGRACAO_DIALPLAN.md) - Migrar para modular
+- [ARQUITETURA_HIBRIDA.md](./ARQUITETURA_HIBRIDA.md) - Portaria virtual
+- [GUIA_DE_TESTES.md](./GUIA_DE_TESTES.md) - Testes completos
 
 ---
 
 **Total:** 8 scripts (6 Linux + 2 Windows)
+
