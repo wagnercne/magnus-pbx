@@ -27,7 +27,7 @@ check_contains() {
     return 0
   fi
 
-  if ! grep -Eq "$pattern" "$file"; then
+  if ! grep -Eq -- "$pattern" "$file"; then
     echo "ERROR: Version mismatch in $file"
     errors=$((errors + 1))
   fi
