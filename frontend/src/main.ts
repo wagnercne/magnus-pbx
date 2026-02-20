@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import App from './App.vue';
 import Dashboard from './views/Dashboard.vue';
-import Login from './views/Login.vue';
+import LoginView from './views/LoginView.vue';
 import { useAuthStore } from './stores/auth';
 import './style.css';
 
@@ -21,7 +21,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
-      component: Login,
+      component: LoginView,
       meta: { requiresAuth: false }
     }
   ]
