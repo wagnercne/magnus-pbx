@@ -107,7 +107,7 @@ MAGNUS-PBX/
 ├── docker-compose.yml          # Orquestração
 ├── Dockerfile                  # Imagem Asterisk
 │
-└── doc/                        # 📚 Documentação
+└── docs/                       # 📚 Documentacao
     ├── ARQUITETURA_HIBRIDA.md      # Arquitetura híbrida (patterns + AGI)
     ├── ARQUITETURA_STACK.md        # Stack completo do sistema
     ├── COMO_INICIAR.md             # Guia de início rápido
@@ -146,7 +146,7 @@ chmod +x scripts/*.sh
 docker compose exec asterisk-magnus asterisk -rx "dialplan show contexts"
 ```
 
-**Documentação completa:** [doc/SETUP_VM.md](doc/SETUP_VM.md)
+**Documentacao completa:** [docs/INDEX.md](docs/INDEX.md)
 
 ---
 
@@ -269,21 +269,22 @@ WHERE id LIKE '%@%';
 
 ---
 
-## 📚 Documentação Completa
+## 📚 Documentacao Completa
 
 | Documento | Descrição |
 |-----------|-----------|
-| [COMO_INICIAR.md](doc/COMO_INICIAR.md) | **COMECE AQUI** - Guia completo de instalação |
-| [DIAGNOSTICO_E_SOLUCAO.md](doc/DIAGNOSTICO_E_SOLUCAO.md) | Análise detalhada do problema e solução |
-| [GUIA_DE_TESTES.md](doc/GUIA_DE_TESTES.md) | Passo a passo de testes e validação |
-| [CONFIGURACAO_SOFTPHONES.md](doc/CONFIGURACAO_SOFTPHONES.md) | Configurar softphones (Zoiper, Linphone, etc) |
-| [ARQUITETURA_HIBRIDA.md](doc/ARQUITETURA_HIBRIDA.md) | Arquitetura híbrida (patterns + AGI + banco) |
-| [ARQUITETURA_STACK.md](doc/ARQUITETURA_STACK.md) | Stack completo (Asterisk + PostgreSQL + C# + Vue) |
-| [PGSQL_VS_ODBC.md](doc/PGSQL_VS_ODBC.md) | Comparação técnica entre drivers |
-| [DIALPLAN_QUAL_USAR.md](doc/DIALPLAN_QUAL_USAR.md) | Escolher dialplan (modular vs monolítico) |
-| [IMPLEMENTACOES_COMPLETAS.md](doc/IMPLEMENTACOES_COMPLETAS.md) | Lista de todas as implementações |
-| [SETUP_BACKEND.md](doc/SETUP_BACKEND.md) | Setup do backend C# (.NET 10) |
-| [SETUP_FRONTEND.md](doc/SETUP_FRONTEND.md) | Setup do frontend Vue 3 + TypeScript |
+| [INDEX.md](docs/INDEX.md) | **INDICE CENTRAL** da documentacao |
+| [COMO_INICIAR.md](docs/COMO_INICIAR.md) | **COMECE AQUI** - Guia completo de instalacao |
+| [DIAGNOSTICO_E_SOLUCAO.md](docs/DIAGNOSTICO_E_SOLUCAO.md) | Analise detalhada do problema e solucao |
+| [GUIA_DE_TESTES.md](docs/GUIA_DE_TESTES.md) | Passo a passo de testes e validacao |
+| [CONFIGURACAO_SOFTPHONES.md](docs/CONFIGURACAO_SOFTPHONES.md) | Configurar softphones (Zoiper, Linphone, etc) |
+| [ARQUITETURA_HIBRIDA.md](docs/ARQUITETURA_HIBRIDA.md) | Arquitetura hibrida (patterns + AGI + banco) |
+| [ARQUITETURA_STACK.md](docs/ARQUITETURA_STACK.md) | Stack completo (Asterisk + PostgreSQL + C# + Vue) |
+| [PGSQL_VS_ODBC.md](docs/PGSQL_VS_ODBC.md) | Comparacao tecnica entre drivers |
+| [DIALPLAN_QUAL_USAR.md](docs/DIALPLAN_QUAL_USAR.md) | Escolher dialplan (modular vs monolitico) |
+| [IMPLEMENTACOES_COMPLETAS.md](docs/IMPLEMENTACOES_COMPLETAS.md) | Lista de todas as implementacoes |
+| [SETUP_BACKEND.md](docs/SETUP_BACKEND.md) | Setup do backend C# (.NET 10) |
+| [SETUP_FRONTEND.md](docs/SETUP_FRONTEND.md) | Setup do frontend Vue 3 + TypeScript |
 
 ---
 
@@ -431,18 +432,16 @@ SELECT id, username, password FROM ps_auths WHERE id='1001@belavista';
 - ✅ Isolamento de tenants (multi-tenant)
 - ✅ Autenticação SIP (ps_auths)
 - ✅ Senhas no banco de dados
-- COMO_INICIAR.md](doc/COMO_INICIAR.md) - **Comece aqui!**
-- [DIAGNOSTICO_E_SOLUCAO.md](doc/DIAGNOSTICO_E_SOLUCAO.md) - Por que não funcionava
-- [PGSQL_VS_ODBC.md](doc/PGSQL_VS_ODBC.md) - Por que usar res_config_pgsql
-- [GUIA_DE_TESTES.md](doc/
+
 ---
 
 ## 📞 Suporte
 
 Para dúvidas sobre a arquitetura, consulte:
-- [DIAGNOSTICO_E_SOLUCAO.md](DIAGNOSTICO_E_SOLUCAO.md) - Por que não funcionava
-- [PGSQL_VS_ODBC.md](PGSQL_VS_ODBC.md) - Por que usar res_config_pgsql
-- [GUIA_DE_TESTES.md](GUIA_DE_TESTES.md) - Como testar cada funcionalidade
+- [INDEX.md](docs/INDEX.md) - Navegacao central da documentacao
+- [DIAGNOSTICO_E_SOLUCAO.md](docs/DIAGNOSTICO_E_SOLUCAO.md) - Por que nao funcionava
+- [PGSQL_VS_ODBC.md](docs/PGSQL_VS_ODBC.md) - Por que usar res_config_pgsql
+- [GUIA_DE_TESTES.md](docs/GUIA_DE_TESTES.md) - Como testar cada funcionalidade
 
 ---
 
