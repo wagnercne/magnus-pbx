@@ -1,9 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
 import { useAuthStore } from '@/stores/auth';
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
+
 // Instância do Axios configurada
 const api: AxiosInstance = axios.create({
-  baseURL: '/api', // Vite proxy vai redirecionar para http://localhost:5000/api
+  baseURL: apiBaseUrl,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'

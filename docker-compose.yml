@@ -38,6 +38,40 @@ services:
       - ./custom_sounds:/var/lib/asterisk/sounds/custom
     depends_on:
       - postgres-magnus
+      - backend-magnus
+    restart: always
+
+  # --- BACKEND API (.NET) ---
+  backend-magnus:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: backend-magnus
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=postgres-magnus;Port=5432;Database=magnus_pbx;Username=admin_magnus;Password=magnus123
+      Asterisk__EnableAmi: "false"
+      Cors__AllowedOrigins__0: http://localhost:5173
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres-magnus
+    networks:
+      - magnus-net
+    restart: always
+
+  # --- FRONTEND (Vue + Nginx) ---
+  frontend-magnus:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: frontend-magnus
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend-magnus
+    networks:
+      - magnus-net
     restart: always
 
   # --- CACHE E ESTADO (Redis) ---

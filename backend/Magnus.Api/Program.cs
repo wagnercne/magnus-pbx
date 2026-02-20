@@ -1,6 +1,5 @@
 using Magnus.Core.Entities;
 using Magnus.Infrastructure.Data;
-using Magnus.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -113,10 +112,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowVueFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") // Vite dev server
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // Para SignalR
+        var origins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+            ?? new[] { "http://localhost:5173", "http://localhost:8080" };
+
+        policy.WithOrigins(origins)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -127,13 +129,13 @@ builder.Services.AddCors(options =>
 // AGI Service (para chamadas do Asterisk)
 builder.Services.AddScoped<Magnus.Pbx.Services.AgiService>();
 
-// Asterisk AMI Service (Hosted Service - roda em background)
-builder.Services.AddHostedService<AsteriskAmiService>();
-builder.Services.AddSingleton<IAsteriskService, AsteriskAmiService>();
-
-// Repositories & Services
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<IGateService, GateService>();
+// Asterisk AMI Service (opcional)
+var enableAmi = builder.Configuration.GetValue<bool>("Asterisk:EnableAmi");
+if (enableAmi)
+{
+    builder.Services.AddHostedService<AsteriskAmiService>();
+    builder.Services.AddSingleton<IAsteriskService, AsteriskAmiService>();
+}
 
 // AutoMapper (se usar)
 // builder.Services.AddAutoMapper(typeof(Program));
@@ -158,8 +160,15 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// Error handling
-app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseExceptionHandler(handler =>
+{
+    handler.Run(async context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync("{\"message\":\"Erro interno do servidor\"}");
+    });
+});
 
 // CORS
 app.UseCors("AllowVueFrontend");

@@ -83,6 +83,8 @@ services:
     depends_on:
       postgres-magnus:
         condition: service_healthy
+      backend-magnus:
+        condition: service_started
     environment:
       - TZ=America/Sao_Paulo
     healthcheck:
@@ -105,6 +107,55 @@ services:
         reservations:
           cpus: '0.3'
           memory: 256M
+
+  # --- BACKEND API (.NET 8) ---
+  backend-magnus:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: backend-magnus
+    hostname: backend-magnus
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5000
+      ConnectionStrings__DefaultConnection: Host=postgres-magnus;Port=5432;Database=magnus_pbx;Username=admin_magnus;Password=${POSTGRES_PASSWORD:-magnus123}
+      Asterisk__EnableAmi: "false"
+      Cors__AllowedOrigins__0: http://localhost:5173
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres-magnus:
+        condition: service_healthy
+    networks:
+      magnus-net:
+        ipv4_address: 172.20.0.7
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  # --- FRONTEND (Vue + Nginx) ---
+  frontend-magnus:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: frontend-magnus
+    hostname: frontend-magnus
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend-magnus
+    networks:
+      magnus-net:
+        ipv4_address: 172.20.0.8
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # --- CACHE (Redis 7) ---
   redis-magnus:

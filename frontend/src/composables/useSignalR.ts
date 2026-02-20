@@ -2,6 +2,8 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { HubConnectionBuilder, HubConnection, LogLevel } from '@microsoft/signalr';
 import { useAuthStore } from '@/stores/auth';
 
+const signalrHubUrl = import.meta.env.VITE_SIGNALR_HUB_URL || '/hubs/asterisk';
+
 export interface GateEvent {
   extension: string;
   tenantSlug: string;
@@ -25,7 +27,7 @@ export function useSignalR() {
     try {
       // Cria conexão com autenticação via query string (configurado no Program.cs)
       connection.value = new HubConnectionBuilder()
-        .withUrl(`/hubs/asterisk?access_token=${authStore.token}`, {
+        .withUrl(`${signalrHubUrl}?access_token=${authStore.token}`, {
           skipNegotiation: false,
           withCredentials: false
         })
