@@ -1,17 +1,17 @@
-# Asterisk ETC - Essencial x Backup
+﻿# Asterisk ETC - Essencial x Backup
 
-Este documento registra a organização aplicada em `asterisk_etc` para manter foco no cenário atual (SIP/PJSIP multi-tenant) e facilitar manutenção.
+Este documento registra a organizaAAo aplicada em `asterisk_etc` para manter foco no cenArio atual (SIP/PJSIP multi-tenant) e facilitar manutenAAo.
 
 ## Essencial (mantido na raiz)
 
-### Núcleo de execução
+### NAcleo de execuAAo
 - `asterisk.conf`
 - `modules.conf`
 - `logger.conf`
 - `manager.conf`
 - `cli.conf`, `cli_aliases.conf`, `cli_permissions.conf`
 
-### SIP/PJSIP e mídia
+### SIP/PJSIP e mAdia
 - `pjsip.conf`
 - `sorcery.conf`
 - `extconfig.conf`
@@ -38,7 +38,7 @@ Este documento registra a organização aplicada em `asterisk_etc` para manter f
 - `features_applicationmap_additional.conf`
 - `features_applicationmap_custom.conf`
 
-### Operação PBX comum
+### OperaAAo PBX comum
 - `voicemail.conf`
 - `musiconhold.conf`
 - `indications.conf`
@@ -69,6 +69,7 @@ Tudo abaixo foi movido para `asterisk_etc/backup` por ser legado, duplicado, opc
 - `geolocation.conf`, `calendar.conf`, `dundi.conf`, `ccss.conf`, `dbsep.conf`
 - `phoneprov.conf`, `aeap.conf`, `res_http_media_cache.conf`
 
-## Observação
+## ObservaAAo
 
-Nada foi apagado; somente movido para `backup` para reversão simples, se necessário.
+Nada foi apagado; somente movido para `backup` para reversAo simples, se necessArio.
+

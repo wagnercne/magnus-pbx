@@ -1,18 +1,18 @@
-# Estrutura Modular do Dialplan
+﻿# Estrutura Modular do Dialplan
 
-A partir de agora, o dialplan está organizado em **4 arquivos**:
+A partir de agora, o dialplan estA organizado em **4 arquivos**:
 
-## 📁 Arquitetura
+## Y Arquitetura
 
 ```
 asterisk_etc/
-├── extensions-modular.conf      # ← Arquivo PRINCIPAL (use este!)
-├── extensions-features.conf     # Feature codes (*43, *97, *500, etc)
-├── routing.conf                 # Sub-rotinas (dial-internal, dial-outbound, etc)
-└── tenants.conf                 # Contextos dos tenants (ctx-belavista, etc)
+aaa extensions-modular.conf      # a Arquivo PRINCIPAL (use este!)
+aaa extensions-features.conf     # Feature codes (*43, *97, *500, etc)
+aaa routing.conf                 # Sub-rotinas (dial-internal, dial-outbound, etc)
+aaa tenants.conf                 # Contextos dos tenants (ctx-belavista, etc)
 ```
 
-## 🔄 Como usar
+## Y Como usar
 
 1. **Copiar o novo arquivo principal:**
    ```bash
@@ -29,37 +29,37 @@ asterisk_etc/
    docker compose exec asterisk-magnus asterisk -rx "dialplan show contexts"
    ```
 
-## ✅ Benefícios
+## a BenefAcios
 
-- **extensions-features.conf**: Todos os códigos `*XX` em um só lugar
-  - Fácil adicionar novos feature codes
-  - Modificar um não afeta os outros
+- **extensions-features.conf**: Todos os cAdigos `*XX` em um sA lugar
+  - FAcil adicionar novos feature codes
+  - Modificar um nAo afeta os outros
 
-- **routing.conf**: Lógica de discagem isolada
-  - Interno, externo, emergência separados
-  - Sub-rotinas reutilizáveis
+- **routing.conf**: LAgica de discagem isolada
+  - Interno, externo, emergAncia separados
+  - Sub-rotinas reutilizAveis
 
-- **tenants.conf**: Só adicionar novos contextos
+- **tenants.conf**: SA adicionar novos contextos
   - `[ctx-{slug}](tenant-base)` herda tudo automaticamente
-  - Customizações específicas opcional
+  - CustomizaAAes especAficas opcional
 
 - **extensions-modular.conf**: Arquivo principal enxuto
-  - Só imports e configurações globais
-  - Fácil de entender e documentar
+  - SA imports e configuraAAes globais
+  - FAcil de entender e documentar
 
-## 🎯 Adicionar novo tenant
+## YZ Adicionar novo tenant
 
 Edite apenas `tenants.conf`:
 
 ```asterisk
 [ctx-novocondominio](tenant-base)
-; Tenant: Novo Condomínio
+; Tenant: Novo CondomAnio
 ; Herda automaticamente: features + routing
 ```
 
 Pronto! Todos os feature codes e rotas funcionam automaticamente.
 
-## 🔧 Adicionar novo feature code
+## Y Adicionar novo feature code
 
 Edite apenas `extensions-features.conf`:
 
@@ -72,10 +72,11 @@ exten => *77,1,NoOp(=== Call Pickup ===)
 
 Todos os tenants recebem automaticamente via `[features-base]`.
 
-## 📝 Arquivos antigos
+## Y Arquivos antigos
 
-- `extensions.conf` (antigo) → Monolítico, difícil manutenção
-- `extensions_hibrido.conf` → Referência para abordagem híbrida
-- `extensions_minivm.conf` → Exemplo de minivm (não usado)
+- `extensions.conf` (antigo) a MonolAtico, difAcil manutenAAo
+- `extensions_hibrido.conf` a ReferAncia para abordagem hAbrida
+- `extensions_minivm.conf` a Exemplo de minivm (nAo usado)
 
-Mantenha como backup mas use `extensions-modular.conf` em produção.
+Mantenha como backup mas use `extensions-modular.conf` em produAAo.
+
