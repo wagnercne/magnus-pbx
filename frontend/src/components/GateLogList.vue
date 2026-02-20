@@ -109,7 +109,7 @@ const totalCount = ref(0);
 const totalPages = computed(() => Math.ceil(totalCount.value / pageSize.value));
 
 // Conecta SignalR para updates em tempo real
-const { lastGateEvent } = useSignalR();
+useSignalR();
 
 // Watch para atualizar logs quando evento real-time chegar
 // watch(lastGateEvent, (newEvent) => {

@@ -50,17 +50,17 @@ export function useSignalR() {
         console.log('📞 Nova chamada:', data);
       });
 
-      connection.value.onreconnecting((error) => {
+      connection.value.onreconnecting((error: Error | undefined) => {
         console.warn('🔄 SignalR reconectando...', error);
         isConnected.value = false;
       });
 
-      connection.value.onreconnected((connectionId) => {
+      connection.value.onreconnected((connectionId: string | undefined) => {
         console.log('✅ SignalR reconectado:', connectionId);
         isConnected.value = true;
       });
 
-      connection.value.onclose((error) => {
+      connection.value.onclose((error: Error | undefined) => {
         console.error('❌ SignalR desconectado:', error);
         isConnected.value = false;
       });
